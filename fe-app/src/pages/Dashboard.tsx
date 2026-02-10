@@ -1,10 +1,13 @@
-import MonthlyChart from "@/components/MonthlyChart";
-import TotalEarningsChart from "@/components/TotalEarningsChart";
+import MonthlyChart from "@/components/Charts/MonthlyChart";
+import TotalEarningsChart from "@/components/Charts/TotalEarningsChart";
 import SidebarOverview from "@/components/SidebarOverview/SidebarOverview";
 import SidebarOverviewList from "@/components/SidebarOverview/SidebarOverviewList";
 import SidebarOverviewListItem from "@/components/SidebarOverview/SidebarOverviewListItem";
-import RecentOrdersTable from "@/components/RecentOrdersTable";
-import { Suspense } from "react";
+import RecentOrdersTable from "@/components/Tables/RecentOrdersTable";
+
+import nikeAirMaxUrl  from "@/assets/nike-air-max.webp";
+import channelHoodieUrl from "@/assets/channel-hoodie.webp";
+
 const Dashboard = () => {
 	return (
 		<>
@@ -74,16 +77,14 @@ const Dashboard = () => {
 					<SidebarOverview title="Top Products" link="/admin/orders">
 						<SidebarOverviewList>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/304
-"
+								image={nikeAirMaxUrl}
 								fallbackName="NA"
 								subtitle="Shoes"
 								amount={37500}
 								name="Nike Air Max 2024"
 							/>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/305
-"
+								image={channelHoodieUrl}
 								fallbackName="CH"
 								subtitle="Hoodie"
 								amount={35500}
@@ -97,32 +98,28 @@ const Dashboard = () => {
 					>
 						<SidebarOverviewList>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/306
-"
+								image="https://i.pravatar.cc/306"
 								fallbackName="MS"
 								subtitle="20 items sold"
 								amount={14}
-								name="Menswear	"
+								name="Menswear"
 							/>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/307
-"
+								image="https://i.pravatar.cc/307"
 								fallbackName="WS"
 								subtitle="10 items sold"
 								amount={5.5}
 								name="Womenswear"
 							/>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/308
-"
+								image="https://i.pravatar.cc/308"
 								fallbackName="AC"
 								subtitle="8 items sold"
 								amount={3}
 								name="Accessories"
 							/>
 							<SidebarOverviewListItem
-								image="https://i.pravatar.cc/309
-"
+								image="https://i.pravatar.cc/309"
 								fallbackName="FW"
 								subtitle="5 items sold"
 								amount={5.5}
