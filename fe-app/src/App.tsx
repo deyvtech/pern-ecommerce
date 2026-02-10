@@ -13,7 +13,7 @@ const router = createBrowserRouter([
 		element: <AdminLayout />,
 		children: [
 			{
-				index: true,
+				path: "dashboard",
 				element: <Dashboard />,
 			},
 			{
