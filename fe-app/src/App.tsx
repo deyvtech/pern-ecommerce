@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router/dom";
 import AdminLayout from "@/layouts/AdminLayout";
 // Pages
 import { Dashboard, Products, Orders, Customers, Analytics } from "./pages";
-import { ThemeProvider } from "./components/ThemeProvider";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 
 const router = createBrowserRouter([
 	{

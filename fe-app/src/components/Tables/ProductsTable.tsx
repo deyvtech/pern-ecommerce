@@ -9,40 +9,37 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Badge } from "../ui/badge";
-import TablePagination from "../TablePagination";
+import { Badge } from "@/components/ui/badge";
+import TablePagination from "@/components/TablePagination";
 
 // import data, types, lib, and icons
 import { products, productStatusColors } from "@/data";
-import type { ProductStatusColorMap  } from "@/types/ProductTypes";
-import { MoreHorizontalIcon } from "lucide-react";
+import type { ProductStatusColorMap } from "@/types/ProductTypes";
+import { PencilLine } from "lucide-react";
 
 import { formatCurrency } from "@/lib/numeral";
 import { useSearchParams } from "react-router";
 
-export default function ProductsTable() {
-    const [searchParams] = useSearchParams();
-    const currentPage = Number(searchParams.get("page")) || 1;
-    const itemsPerPage = 10;
-    const totalPage = Math.ceil(products.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentProducts = products.slice(startIndex, endIndex);
+export default function ProductsTable({
+	setOpenDrawer,
+}: {
+	setOpenDrawer: (prev: (prev: boolean) => boolean) => void;
+}) {
+	const [searchParams] = useSearchParams();
+	const currentPage = Number(searchParams.get("page")) || 1;
+	const itemsPerPage = 10;
+	const totalPage = Math.ceil(products.length / itemsPerPage);
+	const startIndex = (currentPage - 1) * itemsPerPage;
+	const endIndex = startIndex + itemsPerPage;
+	const currentProducts = products.slice(startIndex, endIndex);
 	return (
-		<Table className="text-sm">
-            <TableCaption className="text-left">
-                    Showing {startIndex + 1} to {startIndex + currentProducts.length} of {products.length} products
-                </TableCaption>
+		<Table className="text-sm overflow-hidden">
+			<TableCaption className="text-left">
+				Showing {startIndex + 1} to{" "}
+				{startIndex + currentProducts.length} of {products.length}{" "}
+				products
+			</TableCaption>
 			<TableHeader>
-                
 				<TableRow className="hover:bg-slate-800/20">
 					<TableHead className="w-20">ID</TableHead>
 					<TableHead>Products</TableHead>
@@ -74,44 +71,24 @@ export default function ProductsTable() {
 							</Badge>
 						</TableCell>
 						<TableCell>
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="size-8"
-									>
-										<MoreHorizontalIcon />
-										<span className="sr-only">
-											Open menu
-										</span>
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent
-									align="end"
-									className="p-2"
-								>
-									<DropdownMenuItem>Edit</DropdownMenuItem>
-									<DropdownMenuItem>
-										Duplicate
-									</DropdownMenuItem>
-									<DropdownMenuSeparator />
-									<DropdownMenuItem variant="destructive">
-										Delete
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+							<PencilLine
+								className="cursor-pointer w-8 h-8 border p-2 rounded-full object-contain"
+								onClick={() => setOpenDrawer(prev => !prev)}
+							/>
 						</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
-            <TableFooter className="bg-transparent">
-                <TableRow className="hover:bg-transparent">
-                    <TableCell colSpan={7} className="px-4 py-2">
-                        <TablePagination  currentPage={currentPage} totalPage={totalPage} />
-                    </TableCell>
-                </TableRow>
-            </TableFooter>
+			<TableFooter className="bg-transparent">
+				<TableRow className="hover:bg-transparent">
+					<TableCell colSpan={7} className="px-4 py-2">
+						<TablePagination
+							currentPage={currentPage}
+							totalPage={totalPage}
+						/>
+					</TableCell>
+				</TableRow>
+			</TableFooter>
 		</Table>
 	);
 }

@@ -15,7 +15,7 @@ export default function TablePagination({ currentPage, totalPage }: { currentPag
 				<PaginationItem className={`${currentPage === 1 ? "hidden" : ""}`}>
 					<PaginationPrevious to={`?page=${currentPage - 1}`} />
 				</PaginationItem>
-				<PaginationItem>
+				<PaginationItem className={`${currentPage === 1 ? "hidden" : ""}`}>
 					<PaginationLink to="?page=1">
             {currentPage === 1 ? <span className="sr-only">1</span> : currentPage - 1}
 					</PaginationLink>
@@ -25,7 +25,7 @@ export default function TablePagination({ currentPage, totalPage }: { currentPag
 						{currentPage}
 					</PaginationLink>
 				</PaginationItem>
-				<PaginationItem>
+				<PaginationItem className={`${currentPage === totalPage ? "hidden" : ""}`}>
 					<PaginationLink to={`?page=${currentPage + 1}`}>
 						{currentPage === totalPage ? <span className="sr-only">{totalPage}</span> : currentPage + 1}
 					</PaginationLink>
