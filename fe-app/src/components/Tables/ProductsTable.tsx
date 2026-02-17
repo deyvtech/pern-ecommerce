@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TablePagination from "@/components/TablePagination";
+import { useSearchParams } from "react-router";
 
 // import data, types, lib, and icons
 import { products, productStatusColors } from "@/data";
@@ -18,7 +19,6 @@ import type { ProductStatusColorMap } from "@/types/ProductTypes";
 import { PencilLine } from "lucide-react";
 
 import { formatCurrency } from "@/lib/numeral";
-import { useSearchParams } from "react-router";
 
 export default function ProductsTable({
 	setOpenDrawer,
@@ -56,8 +56,8 @@ export default function ProductsTable({
 						key={product.id}
 						className="hover:bg-slate-800/20"
 					>
-						<TableCell className="font-medium">
-							{product.id}
+						<TableCell className="font-medium py-4">
+							#{product.id}
 						</TableCell>
 						<TableCell>{product.productName}</TableCell>
 						<TableCell>{product.category}</TableCell>
@@ -73,22 +73,24 @@ export default function ProductsTable({
 						<TableCell>
 							<PencilLine
 								className="cursor-pointer w-8 h-8 border p-2 rounded-full object-contain"
-								onClick={() => setOpenDrawer(prev => !prev)}
+								onClick={() => setOpenDrawer((prev) => !prev)}
 							/>
 						</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
-			<TableFooter className="bg-transparent">
-				<TableRow className="hover:bg-transparent">
-					<TableCell colSpan={7} className="px-4 py-2">
-						<TablePagination
-							currentPage={currentPage}
-							totalPage={totalPage}
-						/>
-					</TableCell>
-				</TableRow>
-			</TableFooter>
+			{products.length > itemsPerPage && (
+				<TableFooter className="bg-transparent">
+					<TableRow className="hover:bg-transparent">
+						<TableCell colSpan={7} className="px-4 py-2">
+							<TablePagination
+								currentPage={currentPage}
+								totalPage={totalPage}
+							/>
+						</TableCell>
+					</TableRow>
+				</TableFooter>
+			)}
 		</Table>
 	);
 }

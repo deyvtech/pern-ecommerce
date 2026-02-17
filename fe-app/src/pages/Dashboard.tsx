@@ -3,10 +3,11 @@ import TotalEarningsChart from "@/components/Charts/TotalEarningsChart";
 import SidebarOverview from "@/components/SidebarOverview/SidebarOverview";
 import SidebarOverviewList from "@/components/SidebarOverview/SidebarOverviewList";
 import SidebarOverviewListItem from "@/components/SidebarOverview/SidebarOverviewListItem";
-import RecentOrdersTable from "@/components/Tables/RecentOrdersTable";
+import OrdersTable from "@/components/Tables/OrdersTable";
 
-import nikeAirMaxUrl  from "@/assets/nike-air-max.webp";
+import nikeAirMaxUrl from "@/assets/nike-air-max.webp";
 import channelHoodieUrl from "@/assets/channel-hoodie.webp";
+import { recentOrders } from "@/data";
 
 const Dashboard = () => {
 	return (
@@ -40,7 +41,7 @@ const Dashboard = () => {
 						<h3 className="text-2xl font-medium mb-4">
 							Recent Orders
 						</h3>
-						<RecentOrdersTable />
+						<OrdersTable orders={recentOrders} />
 					</div>
 				</div>
 				<div className="w-1/4 px-10 py-5 bg-slate-100 dark:bg-slate-800/20 rounded-lg">

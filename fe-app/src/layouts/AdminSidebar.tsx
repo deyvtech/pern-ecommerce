@@ -8,7 +8,6 @@ import {
 	LogOut,
 	Store,
 	Settings,
-	UserPen,
 	BadgeInfo 
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +18,7 @@ type SidebarLink = {
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 const sidebarLinks: SidebarLink[] = [
-	{ name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+	{ name: "Dashboard", path: "/admin", icon: LayoutDashboard },
 	{ name: "Products", path: "/admin/products", icon: ShoppingBag },
 	{ name: "Orders", path: "/admin/orders", icon: ShoppingCart },
 	{ name: "Customers", path: "/admin/customers", icon: Users },
@@ -31,7 +30,7 @@ const AdminSidebar = () => {
 		<aside className="w-64 border-r py-10 px-6 h-screen sticky top-0">
 			<div className="pt-10">
 				<h2 className="text-2xl px-4 font-bold mb-6">
-					<Link to="/admin/dashboard">FS Deluxe</Link>
+					<Link to="/admin">FS Deluxe</Link>
 				</h2>
 			</div>
 			{sidebarLinks.map((link) => (

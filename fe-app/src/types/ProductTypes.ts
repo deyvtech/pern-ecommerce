@@ -2,7 +2,7 @@ export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "
 export type ProductStatus = "in stock" | "out of stock" | "low stock";
 
 // PRODUCTS
-export type Product = {
+export interface Product {
 	id: number;
 	productName: string;
 	category: string;
@@ -15,7 +15,7 @@ export type  ProductStatusColorMap = {
 }
 
 // ORDERS
-export type RecentOrder = {
+export interface Order {
 	orderId: number;
 	customer: string;
 	address: string;

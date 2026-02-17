@@ -1,4 +1,4 @@
-import type { Product, RecentOrder, OrderStatusColorMap, ProductStatusColorMap } from "./types/ProductTypes";
+import type { Product, Order, OrderStatusColorMap, ProductStatusColorMap } from "./types/ProductTypes";
 
 export const products: Product[] = [
   { id: 1, productName: "Wireless Over-Ear Headphones", category: "Electronics", price: 199.99, stock: 45, status: "in stock" },
@@ -54,7 +54,7 @@ export const products: Product[] = [
   { id: 51, productName: "Mini Drone with 1080p", category: "Electronics", price: 299.00, stock: 14, status: "low stock" },
 ];
 
-export const recentOrders: RecentOrder[] = [
+export const recentOrders: Order[] = [
 	{
 		orderId: 1,
 		customer: "Marcus Aurelius",
@@ -137,7 +137,98 @@ export const recentOrders: RecentOrder[] = [
 	},
 ];
 
-export const OrderStatusColors: OrderStatusColorMap = {
+export const allOrders: Order[] = [
+	{
+		orderId: 1,
+		customer: "Marcus Aurelius",
+		address: "123 Rome Ave, Italy",
+		status: "delivered",
+		orderDate: "2026-02-01",
+		total: 245.5,
+	},
+	{
+		orderId: 2,
+		customer: "Serena Williams",
+		address: "456 Court St, Florida, USA",
+		status: "shipped",
+		orderDate: "2026-02-03",
+		total: 89.99,
+	},
+	{
+		orderId: 3,
+		customer: "David Gandy",
+		address: "10 Savile Row, London, UK",
+		status: "pending",
+		orderDate: "2026-02-05",
+		total: 1200.0,
+	},
+	{
+		orderId: 4,
+		customer: "Emma Watson",
+		address: "22 Oxford St, London, UK",
+		status: "processing",
+		orderDate: "2026-02-07",
+		total: 350.25,
+	},
+	{
+		orderId: 5,
+		customer: "Hideo Kojima",
+		address: "7-1 Ginza, Tokyo, Japan",
+		status: "delivered",
+		orderDate: "2026-02-08",
+		total: 512.0,
+	},
+	{
+		orderId: 6,
+		customer: "Anya Taylor-Joy",
+		address: "99 Hollywood Blvd, CA, USA",
+		status: "pending",
+		orderDate: "2026-02-09",
+		total: 125.0,
+	},
+	{
+		orderId: 7,
+		customer: "Virgil Abloh",
+		address: "50 Off-White Way, Paris, FR",
+		status: "cancelled",
+		orderDate: "2026-02-09",
+		total: 2100.0,
+	},
+	{
+		orderId: 8,
+		customer: "Lewis Hamilton",
+		address: "44 Speed Lane, Monaco",
+		status: "processing",
+		orderDate: "2026-02-10",
+		total: 450.0,
+	},
+	{
+		orderId: 9,
+		customer: "Zendaya Coleman",
+		address: "14 Euphoria Dr, CA, USA",
+		status: "delivered",
+		orderDate: "2026-02-10",
+		total: 890.75,
+	},
+	{
+		orderId: 10,
+		customer: "Timothée Chalamet",
+		address: "88 Dune Rd, NY, USA",
+		status: "pending",
+		orderDate: "2026-02-10",
+		total: 120.4,
+	},
+	{
+		orderId: 11,
+		customer: "Timothée Chalamet1",
+		address: "88 Dune Rd, NY, USA",
+		status: "pending",
+		orderDate: "2026-02-10",
+		total: 120.4,
+	},
+];
+
+export const orderStatusColors: OrderStatusColorMap = {
 	pending:
 		"bg-yellow-100 text-yellow-700 dark:bg-yellow-950/70 dark:text-yellow-300",
 	processing:

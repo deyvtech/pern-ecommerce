@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
 		Component: AdminLayout,
 		children: [
 			{
-				path: "dashboard",
+				index: true,
 				Component: Dashboard,
 			},
 			{
