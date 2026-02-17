@@ -1,7 +1,7 @@
 <!-- SETUP -->
 install typescript devDependencies
 
-npm install -D @types/express @types/node concurrently nodemon rimraf typescript
+`npm install -D @types/express @types/node concurrently nodemon rimraf typescript`
 
 `@types/express` - Type definitions for Express.js, a popular web framework for Node.js. This package provides TypeScript type definitions for Express, allowing developers to use Express with TypeScript and benefit from type checking and autocompletion.
 
