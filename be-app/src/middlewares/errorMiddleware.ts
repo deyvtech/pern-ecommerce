@@ -1,5 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
+import * as z from "zod";
 export const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.status(err.statusCode || 500).json({ message: err.message || "Internal Server Error" });
+    if (err instanceof z.ZodError) {
+        const message = err.issues[0]?.message; 
+        return res.status(400).json({ success: false, error: message });
+    }
+  res.status(err.statusCode || 500).json({ success: false, message: err.message || "Internal Server Error" });
 };

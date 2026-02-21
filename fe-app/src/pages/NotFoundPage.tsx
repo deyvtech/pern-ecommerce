@@ -23,7 +23,7 @@ const NotFoundPage = () => {
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <a
             href="/"
-            className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 transition-all"
+            className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-900 transition-all"
           >
             <Home size={18} />
             Back to home
