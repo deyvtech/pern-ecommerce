@@ -23,10 +23,11 @@ export const registerController = async (req: Request, res: Response, next: Next
         }
         const user = {
             fullname: result.fullname,
-            email: result.password,
+            email: result.email,
             password: hashedPassword
         }
-        const responseDatabase = await addUser(user, next)
+        await addUser(user, next)
+        // set jwt
         res.status(200).json({ success: true, message: "Registration successful", hashedPassword });
     } catch (error: any) {
         next(error);

@@ -1,6 +1,6 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response} from "express";
 import * as z from "zod";
-export const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorMiddleware = (err: any, req: Request, res: Response) => {
   console.error(err.stack);
     if (err instanceof z.ZodError) {
         const message = err.issues[0]?.message; 

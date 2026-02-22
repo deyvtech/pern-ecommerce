@@ -1,26 +1,31 @@
 import dotenv from 'dotenv';
-import { Pool, Client } from 'pg';
+import { Pool } from 'pg';
 
 dotenv.config();
+const getEnv = (key: string): string => {
+    const value = process.env[key];
+    if (!value) {
+        throw new Error(`Config error: ${key} is missing in .env`);
+    }
+    return value;
+};
 
 const pool: Pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
-const client: Client = new Client({
-  connectionString: process.env.DATABASE_URL,
-})
-
 interface Config {
     port: string | number;
     pool: Pool;
-    client: Client;
+    env: string,
+    jwt_secret: string,
 }
 
 const config: Config = {
     port: process.env.PORT || 5000,
     pool: pool,
-    client: client,
+    env: getEnv('NODE_ENV'),
+    jwt_secret: getEnv('JWT_SECRET'),
 }
 
 export default config;

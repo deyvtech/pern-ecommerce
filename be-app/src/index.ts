@@ -8,7 +8,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Routes
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");
 });
