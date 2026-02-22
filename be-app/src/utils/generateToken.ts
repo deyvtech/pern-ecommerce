@@ -16,6 +16,4 @@ export const generateToken = ({ sub, role, name }: Token, res: Response) => {
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days in milliseconds
         })
     }
-
-    return token
 };

@@ -29,9 +29,9 @@ export const registerController = async (req: Request, res: Response, next: Next
         }
         await addUser(user, next)
 
-        return res.status(200).json({ success: true, message: "Registration successful"});
-    } catch (error: any) {
-        next(error);
+        return res.status(201).json({ success: true, message: "Registration successful"});
+    } catch (err: any) {
+        next(err);
     }
 }
 
