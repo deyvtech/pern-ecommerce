@@ -2,6 +2,9 @@ import type { Request, Response, NextFunction } from "express";
 import * as z from "zod"; 
 import bcrypt from "bcrypt";
 
+import { generateToken } from "../../utils/generateToken.js";
+import { getUserByEmail } from "../../model/getUserByEmail.js";
+
 const loginSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters long'),
@@ -9,11 +12,20 @@ const loginSchema = z.object({
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     try {
-        const result = await loginSchema.parseAsync({ email, password }); 
-        const saltedPassword = await bcrypt.genSalt(10); 
-        const hashedPassword = await bcrypt.hash(result.password, saltedPassword);
+        const { email: parsedEmail, password: parsedPassword } = await loginSchema.parseAsync({ email, password }); 
 
-        res.status(200).json({ success: true, message: "Login successful", hashedPassword });
+       const existingUser =  await getUserByEmail(parsedEmail)
+       console.log(existingUser)
+        if(!existingUser) {
+            return res.status(401).json({ success: false, message: "Invalid email or password"});
+        }
+
+
+        const comparePassword = await bcrypt.compare(parsedPassword, existingUser.password_hash)
+
+        console.log(comparePassword);
+        
+       return res.status(200).json({ success: true, message: "Login successful"});
     } catch (error: any) {
         next(error);
     }

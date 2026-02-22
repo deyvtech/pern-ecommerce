@@ -19,6 +19,7 @@ interface Config {
     pool: Pool;
     env: string,
     jwt_secret: string,
+    jwt_expires_in: string,
 }
 
 const config: Config = {
@@ -26,6 +27,7 @@ const config: Config = {
     pool: pool,
     env: getEnv('NODE_ENV'),
     jwt_secret: getEnv('JWT_SECRET'),
+    jwt_expires_in: getEnv('JWT_EXPIRES_IN')
 }
 
 export default config;

@@ -2,8 +2,9 @@ import type { Request, Response, NextFunction } from "express";
 import * as z from "zod"; 
 import bcrypt from "bcrypt";
 
-import { getUser } from "../../model/getUser.js";
+import { getUserByEmail } from "../../model/getUserByEmail.js";
 import { addUser } from "../../model/addUser.js";
+
 const registerSchema = z.object({
     fullname: z.string().min(3).max(100, "Username must be between 3 and 100 characters long"),
     email: z.string().email("Invalid email address"),
@@ -17,9 +18,9 @@ export const registerController = async (req: Request, res: Response, next: Next
         const saltedPassword = await bcrypt.genSalt(10); 
         const hashedPassword = await bcrypt.hash(result.password, saltedPassword);
 
-        const existingUser = await getUser(result.email, next);
-        if(existingUser) {
-            throw new Error("User already exist")
+        const existingUser = await getUserByEmail(result.email);
+        if(!existingUser) {
+            return res.status(401).json({ success: false, message: "User already exist"});
         }
         const user = {
             fullname: result.fullname,
@@ -27,8 +28,8 @@ export const registerController = async (req: Request, res: Response, next: Next
             password: hashedPassword
         }
         await addUser(user, next)
-        // set jwt
-        res.status(200).json({ success: true, message: "Registration successful", hashedPassword });
+
+        return res.status(200).json({ success: true, message: "Registration successful"});
     } catch (error: any) {
         next(error);
     }
