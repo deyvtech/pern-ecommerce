@@ -1,5 +1,5 @@
 import winston from 'winston';
-
+import config from '../config.js';
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 // 1. Define your custom format
@@ -10,7 +10,7 @@ const logFormat = printf(({ level, message, timestamp, stack }) => {
 
 // 2. Initialize the logger
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: config.env === 'development' ? 'debug' : 'info',
   format: combine(
     errors({ stack: true }), // Capture stack traces for errors
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

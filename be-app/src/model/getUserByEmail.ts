@@ -15,7 +15,7 @@ export const getUserByEmail = async (email: string) => {
         const user = await config.pool.query(textQuery, [email]);
         return user.rows[0];
     } catch (err) {
-        console.log(err)
+        console.error(err)
         throw new Error('Database query error');
     }
 }    

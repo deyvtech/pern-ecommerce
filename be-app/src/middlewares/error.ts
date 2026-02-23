@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import * as z from "zod";
 import logger from "../utils/logger.js";
-export const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const error = (err: any, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.stack);
     if (err instanceof z.ZodError) {
         const message = err.issues[0]?.message; 

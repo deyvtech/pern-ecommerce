@@ -1,15 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
-import * as z from "zod";
 import bcrypt from "bcrypt";
 
 import { generateToken } from "../../utils/generateToken.js";
 import { getUserByEmail } from "../../model/getUserByEmail.js";
 import type { Token } from "../../types/Token.js";
+import { loginSchema } from "../../validators/userValidator.js";
+import { updateLogin } from "../../model/updateLogin.js";
 
-const loginSchema = z.object({
-	email: z.string().email("Invalid email address"),
-	password: z.string().min(6, "Password must be at least 6 characters long"),
-});
 export const loginController = async (
 	req: Request,
 	res: Response,
@@ -43,6 +40,8 @@ export const loginController = async (
 			name: existingUser.fullname,
 		};
 		generateToken(payload, res);
+		// update user database
+		await updateLogin(existingUser.id);
 		return res
 			.status(200)
 			.json({ success: true, message: "Login successful" });

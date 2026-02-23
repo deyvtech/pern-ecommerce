@@ -7,8 +7,6 @@ install typescript devDependencies
 
 `@types/node` - Type definitions for Node.js, the JavaScript runtime environment. This package provides TypeScript type definitions for Node.js, allowing developers to use Node.js with TypeScript and benefit from type checking and autocompletion.
 
-`nodemon` - A utility that automatically restarts a Node.js application when file changes in the directory
-
 `rimraf` - A utility that provides a cross-platform way to delete files and directories. It is often used in build scripts to clean up generated files or directories before rebuilding.
 
 `npx tsc --init` - initialize a TypeScript project and create a tsconfig.json file with default settings. 
