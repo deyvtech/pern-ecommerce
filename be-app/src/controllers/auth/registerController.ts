@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import { getUserByEmail } from "../../model/getUserByEmail.js";
 import { addUser } from "../../model/addUser.js";
