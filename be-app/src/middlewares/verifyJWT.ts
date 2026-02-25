@@ -1,36 +1,34 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import config from "../config.js";
-import { isUserActive } from "../utils/isUserActive.js";
 
-export const verifyJWT = async (req: Request, res: Response, next: NextFunction) => {
+import { AppError } from "./error.js";
+
+import type { AuthRequest } from "../types/request.types.js";
+import type { TokenPayload } from "../types/tokenPayload.types.js";
+
+export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunction) => {
 	try {
-		const authHeader =
-			req.headers.authorization || req.headers.Authorization;
+		const authHeader = req.headers.authorization || req.headers.Authorization;
 		if (!authHeader || !authHeader.toString().startsWith("Bearer ")) {
-			return res
-				.status(401)
-				.json({ success: false, message: "Unauthorized" });
+			throw new AppError("Unauthorized", 401);
 		}
 		const token = authHeader.toString().split(" ")[1];
 
 		if (!token) {
-			return res
-				.status(401)
-				.json({ success: false, message: "Unauthorized" });
+			throw new AppError("Unauthorized", 401);
 		}
 
-		const decoded = jwt.verify(token, config.jwt_refresh_secret) as jwt.JwtPayload;
-		if(!decoded){
-			return res.status(401).json({ success: false, message: "Invalid token" });
-		}
-		if(!(await isUserActive(decoded.sub))) {
-			return res.status(403).json({ success: false, message: "Forbidden" });
-		}
-        
+		const decoded = jwt.verify(token, config.jwt_refresh_secret) as TokenPayload;
+		req.userData = decoded;
+		next();
 	} catch (error) {
 		if (error instanceof jwt.JsonWebTokenError) {
-			return res.status(401).json({ success: false, message: "Invalid token" });
+			return next(new AppError("Invalid token", 403));
 		}
+		if (error instanceof jwt.TokenExpiredError) {
+			return next(new AppError("Token expired", 403));
+		}
+		next(error);
 	}
 };

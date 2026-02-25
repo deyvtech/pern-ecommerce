@@ -5,9 +5,9 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 
 import { error } from "./middlewares/error.js";
-import { verifyToken } from "./middlewares/auth.js";
+import { verifyJWT } from "./middlewares/verifyJWT.js";
 
-import type { AuthRequest } from "./types/Request.js";
+import apiRoutes from "./routes/apiRoutes.js";
 
 const app: Application = express();
 // Global middleware
@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // Routes
-app.use("/api/auth", authRoutes);
-app.get("/api/profile", );
+app.use("/auth", authRoutes);
+app.use("/api/v1", verifyJWT, apiRoutes);
 // 404 Endpoint
 app.use((req: Request, res: Response) => {
 	res.status(404).json({ success: false, message: "404 not found" });
