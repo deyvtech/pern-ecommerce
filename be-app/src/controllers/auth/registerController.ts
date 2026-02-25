@@ -6,10 +6,10 @@ import { addUser } from "../../model/addUser.js";
 import { registerSchema } from "../../validators/userValidator.js";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
-    const { fullname, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
-        const result = await registerSchema.parseAsync({ fullname, email, password });
+        const result = await registerSchema.parseAsync({ name, email, password });
         const saltedPassword = await bcrypt.genSalt(10); 
         const hashedPassword = await bcrypt.hash(result.password, saltedPassword);
 
@@ -18,7 +18,7 @@ export const registerController = async (req: Request, res: Response, next: Next
             return res.status(401).json({ success: false, message: "User already exist"});
         }
         const user = {
-            fullname: result.fullname,
+            name: result.name,
             email: result.email,
             password: hashedPassword
         }

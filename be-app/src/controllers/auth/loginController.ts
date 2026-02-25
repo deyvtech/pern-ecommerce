@@ -37,7 +37,7 @@ export const loginController = async (
 		const payload: Token = {
 			sub: existingUser.id,
 			role: existingUser.role,
-			name: existingUser.fullname,
+			name: existingUser.name,
 		};
 		generateToken(payload, res);
 		// update user database
