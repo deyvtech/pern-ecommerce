@@ -13,7 +13,7 @@ export const addUser = async (user: User, next: NextFunction) => {
 	try {
 		await client.query("BEGIN");
 
-		const queryText = `INSERT INTO users(full_name, email) VALUES($1, $2) RETURNING id`;
+		const queryText = `INSERT INTO users(name, email) VALUES($1, $2) RETURNING id`;
 		const res = await client.query(queryText, [user.name, user.email]);
 
 		const queryText2 = `INSERT INTO user_auths(user_id, password_hash) VALUES($1, $2)`;

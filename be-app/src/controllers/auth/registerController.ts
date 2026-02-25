@@ -6,6 +6,7 @@ import { addUser } from "../../model/addUser.js";
 import { registerSchema } from "../../validators/userValidator.js";
 
 import { AppError } from "../../middlewares/error.js";
+import logger from "../../utils/logger.js";
 
 export const registerController = async (req: Request, res: Response, next: NextFunction) => {
 	const { name, email, password } = req.body;
@@ -25,7 +26,7 @@ export const registerController = async (req: Request, res: Response, next: Next
 			password: hashedPassword,
 		};
 		await addUser(user, next);
-
+		logger.info(`User ${user.email} registered successfully`);
 		return res.status(201).json({ success: true, message: "Registration successful" });
 	} catch (error) {
 		next(error);
