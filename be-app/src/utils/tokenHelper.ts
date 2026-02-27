@@ -59,13 +59,9 @@ const setRefreshCookie = (res: Response, refreshToken: string) => {
 }
 
 // Rotate token
-const rotateRefreshToken = async (oldToken: any, user: TokenPayload, req: Request, res: Response) => {
+const rotateRefreshToken = async (refreshTokenId: string, user: TokenPayload, req: Request, res: Response) => {
 	const newJti = createJti();
-	// await supabase
-	// 	.from("refresh_tokens")
-	// 	.update({ revoked_at: new Date(), replaced_by: newJti })
-	// 	.eq("id", oldToken.id);
-    await updateRefreshToken(oldToken.jti, newJti);
+    await updateRefreshToken(refreshTokenId, newJti);
 
 	const newAccessToken = signAccessToken(user);
 	const newRefreshToken = signRefreshToken(user.sub, newJti);

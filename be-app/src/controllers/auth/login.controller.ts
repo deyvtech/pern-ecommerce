@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 // import error middleware
 import { AppError } from "../../middlewares/error.js";
 // import validators
-import { loginSchema } from "../../validators/userValidator.js";
+import { loginSchema } from "../../validators/user.validator.js";
 // import services functions
 import { getUserByEmail } from "../../services/user.service.js";
 import { updateLogin } from "../../services/auth.service.js";
@@ -11,8 +11,14 @@ import { updateLogin } from "../../services/auth.service.js";
 import type { TokenPayload } from "../../types/token.types.js";
 import type { Request, Response, NextFunction } from "express";
 // helper functions
-import logger from "../../utils/logger.js";
-import { createJti, persistRefreshToken, setRefreshCookie, signAccessToken, signRefreshToken } from "../../utils/tokenHelper.js";
+import logger from "../../utils/loggerHelper.js";
+import {
+	createJti,
+	persistRefreshToken,
+	setRefreshCookie,
+	signAccessToken,
+	signRefreshToken,
+} from "../../utils/tokenHelper.js";
 
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
 	const { email, password } = req.body;
@@ -41,7 +47,7 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 
 		// check if user is active
 		if (!existingUser.is_active) {
-			throw new AppError("User is not active", 403);
+			throw new AppError("User account is deactivated", 403);
 		}
 
 		// generate access token
@@ -59,18 +65,16 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 			userId: existingUser.id,
 			refreshToken,
 			jti,
-			ip: req.ip ?? req.socket.remoteAddress ?? 'unknown',
+			ip: req.ip ?? req.socket.remoteAddress ?? "unknown",
 			userAgent: req.headers["user-agent"] || "Unknown Device",
-		})
+		});
 		setRefreshCookie(res, refreshToken);
 
 		// update user login db
 		await updateLogin(existingUser.id);
 
 		logger.info(`User ${existingUser.email} logged in successfully`);
-		return res
-			.status(200)
-			.json({ success: true, message: "Login successful", token: accessToken });
+		return res.status(200).json({ success: true, message: "Login successful", token: accessToken });
 	} catch (error: any) {
 		next(error);
 	}

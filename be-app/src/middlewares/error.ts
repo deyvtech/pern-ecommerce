@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import * as z from "zod";
-import logger from "../utils/logger.js";
+import logger from "../utils/loggerHelper.js";
 
 class AppError extends Error {
 	statusCode: number;

@@ -1,6 +1,6 @@
 import config from "../config.js";
 import { DatabaseError } from "../middlewares/error.js";
-import logger from "../utils/logger.js";
+import logger from "../utils/loggerHelper.js";
 import type { User } from "../types/user.types.js";
 
 // CREATE
@@ -18,7 +18,7 @@ export const addUser = async (user: User) => {
 		await client.query("COMMIT");
 	} catch (error) {
 		await client.query("ROLLBACK");
-		logger.error(error)
+		logger.error(error);
 		throw new DatabaseError("Database query error", 500);
 	} finally {
 		client.release();
@@ -48,7 +48,7 @@ export const getUserByEmail = async (email: string) => {
 		logger.error(error);
 		throw new DatabaseError("Database query error", 500);
 	}
-}
+};
 
 export const getUserById = async (userId: string | undefined | null) => {
 	const { pool } = config;
@@ -69,8 +69,7 @@ export const getUserById = async (userId: string | undefined | null) => {
 		const data = result.rows[0];
 		return data;
 	} catch (error) {
-		logger.error(error)
+		logger.error(error);
 		throw new DatabaseError("Database query error", 500);
 	}
 };
-

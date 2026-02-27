@@ -1,14 +1,12 @@
 import config from "../../config.js";
-import logger from "../../utils/logger.js";
+import logger from "../../utils/loggerHelper.js";
 
 export const logoutController = (req: any, res: any) => {
-	const isProduction = config.env === "production";
-
 	res.clearCookie("jwt", {
 		httpOnly: true,
-		expires: new Date(0),
-		secure: isProduction,
+		secure: config.env === "production",
 		sameSite: "lax",
+		path: '/auth/refresh',
 	});
 	logger.info("User logged out successfully");
 	res.status(200).json({ success: true, message: "Logged out successfully" });

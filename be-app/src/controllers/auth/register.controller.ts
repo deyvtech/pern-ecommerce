@@ -4,10 +4,10 @@ import bcrypt from "bcryptjs";
 import { getUserByEmail } from "../../services/user.service.js";
 import { addUser } from "../../services/user.service.js";
 
-import { registerSchema } from "../../validators/userValidator.js";
+import { registerSchema } from "../../validators/user.validator.js";
 
 import { AppError } from "../../middlewares/error.js";
-import logger from "../../utils/logger.js";
+import logger from "../../utils/loggerHelper.js";
 
 import type { User } from "../../types/user.types.js";
 
@@ -18,7 +18,7 @@ export const registerController = async (req: Request, res: Response, next: Next
 		const parsedUser = await registerSchema.parseAsync({ name, email, password });
 		const saltedPassword = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(parsedUser.password, saltedPassword);
-		
+
 		const existingUser = await getUserByEmail(parsedUser.email);
 		if (existingUser) {
 			throw new AppError("User already exist", 401);

@@ -2,12 +2,12 @@ import express, { type Request, type Response, type Application } from "express"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/authRoutes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 import { error } from "./middlewares/error.js";
 import { verifyJWT } from "./middlewares/verifyJWT.js";
 
-import apiRoutes from "./routes/apiRoutes.js";
+import apiRoutes from "./routes/api.routes.js";
 import config from "./config.js";
 
 const app: Application = express();
@@ -19,12 +19,12 @@ app.use(cookieParser());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/api/v1", verifyJWT, apiRoutes);
+app.use('/auth/aa', (req, res) => {
+	console.log(req.cookies)
+	res.status(200).json({ success: true, message: "Token is valid" });
+});
 // 404 Endpoint
 app.use(async (req: Request, res: Response) => {
-	console.log(req.headers["user-agent"]);
-	console.log(new Date().toISOString());
-	const data = await config.pool.query("SELECT NOW()");
-	console.log(data.rows[0]);
 	res.status(404).json({ success: false, message: "404 not found" });
 });
 // Error handling middleware
