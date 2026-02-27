@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { Pool } from "pg";
 import jwt from "jsonwebtoken";
+import { DatabaseError } from "./middlewares/error.js";
 
 dotenv.config();
 const getEnv = (key: string): string => {
@@ -13,6 +14,21 @@ const getEnv = (key: string): string => {
 
 const pool: Pool = new Pool({
 	connectionString: process.env.DATABASE_URL,
+	connectionTimeoutMillis: 15000, // Max time to wait for a connection (5s)
+    // idleTimeoutMillis: 30000,      // How long a client sits idle before closing
+    // max: 10,                       // Maximum number of clients in the pool
+
+    ssl: {rejectUnauthorized: false}
+});
+
+// Test the connection immediately on startup
+pool.connect((err, client, release) => {
+  if (err) {
+	return console.error('Error connecting to Supabase:', err.stack);
+    // return process.exit(1)
+  }
+  console.log('Successfully connected to Supabase.');
+  release();
 });
 
 interface Config {

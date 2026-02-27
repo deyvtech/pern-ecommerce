@@ -8,6 +8,7 @@ import { error } from "./middlewares/error.js";
 import { verifyJWT } from "./middlewares/verifyJWT.js";
 
 import apiRoutes from "./routes/apiRoutes.js";
+import config from "./config.js";
 
 const app: Application = express();
 // Global middleware
@@ -19,7 +20,11 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/api/v1", verifyJWT, apiRoutes);
 // 404 Endpoint
-app.use((req: Request, res: Response) => {
+app.use(async (req: Request, res: Response) => {
+	console.log(req.headers["user-agent"]);
+	console.log(new Date().toISOString());
+	const data = await config.pool.query("SELECT NOW()");
+	console.log(data.rows[0]);
 	res.status(404).json({ success: false, message: "404 not found" });
 });
 // Error handling middleware

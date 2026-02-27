@@ -5,7 +5,7 @@ import config from "../config.js";
 import { AppError } from "./error.js";
 
 import type { AuthRequest } from "../types/request.types.js";
-import type { TokenPayload } from "../types/tokenPayload.types.js";
+import type { TokenPayload } from "../types/token.types.js";
 
 export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunction) => {
 	try {
@@ -19,7 +19,7 @@ export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunct
 			throw new AppError("Unauthorized", 401);
 		}
 
-		const decoded = jwt.verify(token, config.jwt_refresh_secret) as TokenPayload;
+		const decoded = jwt.verify(token, config.jwt_access_secret) as TokenPayload;
 		req.userData = decoded;
 		next();
 	} catch (error) {
