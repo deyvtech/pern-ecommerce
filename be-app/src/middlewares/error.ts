@@ -18,9 +18,8 @@ class DatabaseError extends Error {
 		Error.captureStackTrace(this, this.constructor);
 	}
 }
-export { AppError, DatabaseError };
 
-export const error = (err: any, req: Request, res: Response, next: NextFunction) => {
+const error = (err: any, req: Request, res: Response, next: NextFunction) => {
 	// If the headers have already been sent, delegate to the default Express error handler
 	if (res.headersSent) {
 		return next(err);
@@ -46,3 +45,4 @@ export const error = (err: any, req: Request, res: Response, next: NextFunction)
 		message: err.message || "Internal Server Error",
 	});
 };
+export { AppError, DatabaseError, error };

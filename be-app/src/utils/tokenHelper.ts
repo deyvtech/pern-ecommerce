@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto"; // token hashing
 import type { Response, Request } from "express";
+import config from "../config.js";
 
 import type { TokenPayload, PersistRefreshTokenParams } from "../types/token.types.js";
-
-import config from "../config.js";
 
 import { addRefreshToken, updateRefreshToken } from "../services/token.service.js";
 
@@ -52,7 +51,7 @@ const setRefreshCookie = (res: Response, refreshToken: string) => {
 	res.cookie("jwt", refreshToken, {
 		httpOnly: true,
 		secure: config.env === 'production',
-		sameSite: 'lax',
+		sameSite: 'none',
 		path: "/auth/refresh",
 		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days in ms
 	});

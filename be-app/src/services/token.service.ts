@@ -66,3 +66,15 @@ export const deleteRefreshToken = async (refreshTokenId: string) => {
 		throw new DatabaseError("Database query failed", 500);
 	}
 };
+
+export const revokeUserTokens = async (tokenHash: string) => {
+	const revoked_at = new Date();
+	const query = `UPDATE refresh_tokens SET revoked_at = $1 WHERE token_hash = $2 AND revoked_at IS NULL`;
+	const values = [revoked_at, tokenHash];
+	try {
+		await config.pool.query(query, values);
+	} catch (error) {
+		logger.error(error);
+		throw new DatabaseError("Database query failed", 500);
+	}
+};

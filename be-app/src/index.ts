@@ -2,15 +2,14 @@ import express, { type Request, type Response, type Application } from "express"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/auth.routes.js";
-
 import { error } from "./middlewares/error.js";
 import { verifyJWT } from "./middlewares/verifyJWT.js";
 
 import apiRoutes from "./routes/api.routes.js";
-import config from "./config.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app: Application = express();
+
 // Global middleware
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
