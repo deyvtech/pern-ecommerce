@@ -51,8 +51,8 @@ const setRefreshCookie = (res: Response, refreshToken: string) => {
 	res.cookie("jwt", refreshToken, {
 		httpOnly: true,
 		secure: config.env === 'production',
-		sameSite: 'none',
-		path: "/auth/refresh",
+		sameSite: 'lax',
+		path: "/auth",
 		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days in ms
 	});
 }

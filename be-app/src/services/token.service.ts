@@ -8,6 +8,7 @@ export const getRefreshTokenAndUser = async (tokenHash: string, jti: string) => 
 	SELECT 
 	u.id, 
 	u.name, 
+	u.email,
 	u.role,
 	u.is_active, 
 	rt.id as refresh_token_id, 
