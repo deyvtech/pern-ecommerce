@@ -1,6 +1,6 @@
 import React from 'react';
 import { Home, ArrowLeft } from 'lucide-react'; // Using lucide-react for clean icons
-
+import { Link } from 'react-router';
 const NotFoundPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-6">
@@ -21,13 +21,13 @@ const NotFoundPage = () => {
 
         {/* Action Buttons */}
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-slate-900 transition-all"
           >
             <Home size={18} />
             Back to home
-          </a>
+          </Link>
           
           <button 
             onClick={() => window.history.back()}
