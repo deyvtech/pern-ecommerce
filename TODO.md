@@ -7,6 +7,13 @@
 - [x] Refresh token generation and storage
 - [x] Token validation and verification
 - [x] Token revocation and logout
+- [ ] Rate limiting for authentication endpoints
+
+## Product Management
+- [ ] CRUD operations for products 
+
+## Order Management
+- [ ] CRUD operations for orders
 
 
 # Frontend App Features
