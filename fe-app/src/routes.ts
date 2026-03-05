@@ -6,7 +6,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
 // Pages
-import { Dashboard, Products, Orders, Customers, Analytics, NotFoundPage, SignIn, SignUp } from "./pages";
+import { Dashboard, Products, Orders, Customers, Analytics, NotFoundPage, Auth} from "./pages";
 
 export const router = createBrowserRouter([
 	{
@@ -43,12 +43,8 @@ export const router = createBrowserRouter([
 				Component: AuthLayout,
 				children: [
 					{
-						path: "login",
-						Component: SignIn,
-					},
-					{
-						path: "register",
-						Component: SignUp,
+						path: "auth",
+						Component: Auth,
 					},
 				],
 			},
