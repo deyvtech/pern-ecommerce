@@ -32,6 +32,7 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 		const existingUser = await getUserByEmail(parsedEmail);
 		if (!existingUser) {
 			throw new AppError("Invalid email or password", 401);
+			// return res.status(401).json({success: false, message: "Invalid Email and Password"})
 		}
 
 		// Check if the password is correct

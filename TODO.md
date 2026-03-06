@@ -8,6 +8,8 @@
 - [x] Token validation and verification
 - [x] Token revocation and logout
 - [ ] Rate limiting for authentication endpoints
+- [ ] OTP verification for registration and login
+- [ ] Password reset functionality
 
 ## Product Management
 - [ ] CRUD operations for products 
@@ -20,8 +22,11 @@
 
 ## User authentication
 - [ ] Authentication forms (login and registration)
-    - [ ] Token management (storing and refreshing tokens)
-    - [ ] Register and login UI components
+    - [ 
+
+        
+    ] Token management (storing and refreshing tokens)
+    - [x] Register and login UI components
     - [ ] Error handling and validation feedback
 
 ## Admin

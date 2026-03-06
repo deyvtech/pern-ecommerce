@@ -33,6 +33,7 @@ const error = (err: any, req: Request, res: Response, next: NextFunction) => {
 	}
 	// Handle custom AppError instances
 	if (err instanceof AppError) {
+		console.log("AppError")
 		return res.status(err.statusCode).json({ success: false, message: err.message });
 	}
 	// Handle custom DatabaseError instances

@@ -1,13 +1,20 @@
 import { RouterProvider } from "react-router/dom";
 
-import { ThemeProvider } from "./contexts/ThemeProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "@/contexts/AuthProvider";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { router } from "./routes";
+const queryClient = new QueryClient();
 
 const App = () => {
 	return (
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<RouterProvider router={router} />
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<AuthProvider>
+				<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+					<RouterProvider router={router} />
+				</ThemeProvider>
+			</AuthProvider>
+		</QueryClientProvider>
 	);
 };
 

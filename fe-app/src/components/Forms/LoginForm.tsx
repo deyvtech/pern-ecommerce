@@ -7,12 +7,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
+	FieldDescription,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
 } from "@/components/ui/field";
 
+import axios from "@/api/axios";
+import { isAxiosError } from "@/api/axios";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+interface ApiErrorResponse {
+	message: string;
+}
 const LoginForm = () => {
+
+	// React Hook Form
 	const form = useForm<z.infer<typeof loginUserSchema>>({
 		resolver: zodResolver(loginUserSchema),
 		defaultValues: {
@@ -20,31 +30,64 @@ const LoginForm = () => {
 			password: "",
 		},
 	});
+
+	// React Query / useMutation
+	const mutation = useMutation({
+		mutationFn: async (data: z.infer<typeof loginUserSchema>) => {
+			const res = await axios.post("/auth/login", data);
+			return res.data;
+		},
+		onMutate: () => {
+			toast.loading("Logging in...");
+		},
+		onSuccess: (data: z.infer<typeof loginUserSchema>) => {
+			toast.dismiss();
+			console.log(data);
+			toast.success("Logged in successfully!");
+			form.reset();
+		},
+		onError: (error) => {
+			 	toast.dismiss();
+			if (isAxiosError<ApiErrorResponse>(error)) {
+				const errorObj = error.response?.data;
+				toast.error(errorObj?.message);
+			} else {
+				toast.error("Something went wrong");
+			}
+		},
+		onSettled: () => {
+			
+		},
+	});
+
+	// HandleSubmit
 	async function onSubmit(data: z.infer<typeof loginUserSchema>) {
-		console.log(data);
-		form.reset();
+		mutation.mutate(data);
 	}
+
 	return (
-		<form
-			onSubmit={form.handleSubmit(onSubmit)}
-			className="w-full"
-		>
+		<form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
 			<FieldGroup>
 				<Controller
 					name="email"
 					control={form.control}
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
-							<FieldLabel htmlFor={field.name}>Email Address*</FieldLabel>
+							<FieldLabel htmlFor={field.name}>
+								Email Address*
+							</FieldLabel>
 							<Input
 								{...field}
 								id={field.name}
 								type="text"
-								placeholder="Please enter your email"
+								placeholder="e.g., john.doe@example.com"
 								aria-invalid={fieldState.invalid}
 								autoComplete="off"
 								className="h-12 md:text-sm"
 							/>
+							<FieldDescription>
+								We'll never share your email with anyone else.
+							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
 							)}
@@ -58,7 +101,9 @@ const LoginForm = () => {
 					control={form.control}
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
-							<FieldLabel htmlFor={field.name}>Password*</FieldLabel>
+							<FieldLabel htmlFor={field.name}>
+								Password*
+							</FieldLabel>
 							<Input
 								{...field}
 								id={field.name}
@@ -68,6 +113,10 @@ const LoginForm = () => {
 								autoComplete="off"
 								className="h-12 md:text-sm"
 							/>
+							<FieldDescription>
+								Your password must be at least 8 characters
+								long.
+							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
 							)}

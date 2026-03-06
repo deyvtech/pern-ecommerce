@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
+	FieldDescription,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
@@ -40,11 +41,14 @@ const RegisterForm = () => {
 								{...field}
 								id={field.name}
 								type="text"
-								placeholder="Please enter your fullname"
+								placeholder="e.g., John Doe"
 								aria-invalid={fieldState.invalid}
 								autoComplete="off"
 								className="h-12 md:text-sm"
 							/>
+							<FieldDescription>
+								Please enter your fullname
+							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
 							)}
@@ -65,11 +69,14 @@ const RegisterForm = () => {
 								{...field}
 								id={field.name}
 								type="text"
-								placeholder="Please enter your email address"
+								placeholder="e.g., john.doe@example.com"
 								aria-invalid={fieldState.invalid}
 								autoComplete="off"
 								className="h-12 md:text-sm"
 							/>
+							<FieldDescription>
+								We'll never share your email with anyone else.
+							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
 							)}
@@ -95,6 +102,9 @@ const RegisterForm = () => {
 								autoComplete="off"
 								className="h-12 md:text-sm"
 							/>
+							<FieldDescription>
+								Your password must be at least 8 characters long.
+							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
 							)}
