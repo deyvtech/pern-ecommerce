@@ -11,26 +11,55 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/components/ui/field";
+
+// React Query
+import { useMutation } from "@tanstack/react-query";
+import axios, {isAxiosError} from "@/api/axios";
+import { toast } from "sonner";
+
 const RegisterForm = () => {
 	const form = useForm<z.infer<typeof createUserSchema>>({
 		resolver: zodResolver(createUserSchema),
 		defaultValues: {
-			fullname: "",
+			name: "",
 			email: "",
 			password: "",
 		},
 	});
 
+	const mutation = useMutation({
+		mutationFn: async (data: z.infer<typeof createUserSchema>) => {
+			const response = await axios.post('/auth/register', data);
+			return response.data
+		},
+		onMutate: () => {
+			toast.loading("Registering...");
+		},
+		onSuccess: (response: {message: string, success: boolean}) => {
+			toast.dismiss();
+			toast.success(response.message);
+			form.reset();
+		},
+		onError: (error) => {
+			toast.dismiss();
+			if(isAxiosError<{message: string}>(error)) {
+				const errorObj = error.response?.data;
+				toast.error(errorObj?.message);
+			} else {
+				toast.error("Something went wrong");
+			}
+		}
+	})
+
 	async function onSubmit(data: z.infer<typeof createUserSchema>) {
-		console.log(data);
-		form.reset();
+		mutation.mutate(data)
 	}
 
 	return (
 		<form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
 			<FieldGroup>
 				<Controller
-					name="fullname"
+					name="name"
 					control={form.control}
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
@@ -47,7 +76,7 @@ const RegisterForm = () => {
 								className="h-12 md:text-sm"
 							/>
 							<FieldDescription>
-								Please enter your fullname
+								Please enter your name
 							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
@@ -103,7 +132,7 @@ const RegisterForm = () => {
 								className="h-12 md:text-sm"
 							/>
 							<FieldDescription>
-								Your password must be at least 8 characters long.
+								Your password must be at least 6 characters long.
 							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />
@@ -114,9 +143,9 @@ const RegisterForm = () => {
 			</FieldGroup>
 			<Button
 				size="lg"
-				className="w-full text-sm p-6 mt-4 cursor-pointer"
+				className={`w-full text-sm p-6 mt-4 ${mutation.isPending ? "cursor-not-allowed opacity-50" : ""}`}
 			>
-				Sign Up
+				{mutation.isPending ? "Registering..." : "Register"}
 			</Button>
 		</form>
 	);

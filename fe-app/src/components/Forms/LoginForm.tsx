@@ -17,9 +17,7 @@ import axios from "@/api/axios";
 import { isAxiosError } from "@/api/axios";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-interface ApiErrorResponse {
-	message: string;
-}
+
 const LoginForm = () => {
 
 	// React Hook Form
@@ -34,29 +32,25 @@ const LoginForm = () => {
 	// React Query / useMutation
 	const mutation = useMutation({
 		mutationFn: async (data: z.infer<typeof loginUserSchema>) => {
-			const res = await axios.post("/auth/login", data);
-			return res.data;
+			const response = await axios.post("/auth/login", data);
+			return response.data;
 		},
 		onMutate: () => {
 			toast.loading("Logging in...");
 		},
-		onSuccess: (data: z.infer<typeof loginUserSchema>) => {
+		onSuccess: (response: {message: string, success: boolean, token: string}) => {
 			toast.dismiss();
-			console.log(data);
-			toast.success("Logged in successfully!");
+			toast.success(response.message);
 			form.reset();
 		},
 		onError: (error) => {
 			 	toast.dismiss();
-			if (isAxiosError<ApiErrorResponse>(error)) {
+			if (isAxiosError<{message: string;}>(error)) {
 				const errorObj = error.response?.data;
 				toast.error(errorObj?.message);
 			} else {
 				toast.error("Something went wrong");
 			}
-		},
-		onSettled: () => {
-			
 		},
 	});
 
@@ -114,7 +108,7 @@ const LoginForm = () => {
 								className="h-12 md:text-sm"
 							/>
 							<FieldDescription>
-								Your password must be at least 8 characters
+								Your password must be at least 6 characters
 								long.
 							</FieldDescription>
 							{fieldState.invalid && (
@@ -126,9 +120,9 @@ const LoginForm = () => {
 			</FieldGroup>
 			<Button
 				size="lg"
-				className="w-full text-sm p-6 mt-4 cursor-pointer"
+				className={`w-full text-sm p-6 mt-4 cursor-pointer ${mutation.isPending ? "cursor-not-allowed opacity-50" : ""}`}
 			>
-				Sign In
+				{mutation.isPending ? "Logging in..." : "Login"}
 			</Button>
 		</form>
 	);
