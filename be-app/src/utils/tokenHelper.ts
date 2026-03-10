@@ -20,7 +20,7 @@ const createJti = () => {
 
 // Mint Access Token
 const signAccessToken = (user: TokenPayload) => {
-	const payload = { sub: user.sub, role: user.role, name: user.name };
+	const payload = { sub: user.sub };
 	return jwt.sign(payload, config.jwt_access_secret, {
 		expiresIn: config.jwt_access_expires_in,
 	} as jwt.SignOptions);

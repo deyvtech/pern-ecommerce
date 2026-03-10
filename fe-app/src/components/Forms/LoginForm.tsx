@@ -18,7 +18,12 @@ import { isAxiosError } from "@/api/axios";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 
+import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "react-router";
+
 const LoginForm = () => {
+	const { setAuth } = useAuth();
+	const navigate = useNavigate();
 
 	// React Hook Form
 	const form = useForm<z.infer<typeof loginUserSchema>>({
@@ -38,14 +43,21 @@ const LoginForm = () => {
 		onMutate: () => {
 			toast.loading("Logging in...");
 		},
-		onSuccess: (response: {message: string, success: boolean, token: string}) => {
+		onSuccess: (response: {
+			message: string;
+			success: boolean;
+			token: string;
+		}) => {
 			toast.dismiss();
 			toast.success(response.message);
+			const token = response.token;
+			setAuth({token});
 			form.reset();
+			navigate('/admin')
 		},
 		onError: (error) => {
-			 	toast.dismiss();
-			if (isAxiosError<{message: string;}>(error)) {
+			toast.dismiss();
+			if (isAxiosError<{ message: string }>(error)) {
 				const errorObj = error.response?.data;
 				toast.error(errorObj?.message);
 			} else {

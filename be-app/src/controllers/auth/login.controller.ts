@@ -61,9 +61,7 @@ export const loginController = async (
 
 		// generate access token
 		const accessTokenPayload: TokenPayload = {
-			sub: existingUser.id,
-			role: existingUser.role,
-			name: existingUser.name,
+			sub: existingUser.id
 		};
 		const accessToken = signAccessToken(accessTokenPayload);
 		// generate refresh token
@@ -82,11 +80,15 @@ export const loginController = async (
 		// update user login db
 		await updateLogin(existingUser.id);
 
-		logger.info(`User ${existingUser.email} logged in successfully`);
+		logger.info(`User ${existingUser.email} logged in successful`);
 		return res.status(200).json({
 			success: true,
-			message: "Login successful",
+			message: "Logged in successful",
 			token: accessToken,
+			user: {
+				role: existingUser.role,
+				name: existingUser.name,
+			}
 		});
 	} catch (error: any) {
 		next(error);

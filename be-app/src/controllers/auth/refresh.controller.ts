@@ -50,8 +50,6 @@ export const refreshController = async (req: Request, res: Response, next: NextF
 		// Rotate token
 		const refreshTokenPayload: TokenPayload = {
 			sub: user.id,
-			role: user.role,
-			name: user.name,
 		};
 		const { accessToken } = await rotateRefreshToken(user.refresh_token_id, refreshTokenPayload, req, res);
 		logger.info(`Refresh token rotated successfully for user ${user.email}`);

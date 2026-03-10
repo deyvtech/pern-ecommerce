@@ -6,7 +6,15 @@ import AdminLayout from "@/layouts/AdminLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
 // Pages
-import { Dashboard, Products, Orders, Customers, Analytics, NotFoundPage, Auth} from "./pages";
+import {
+	Dashboard,
+	Products,
+	Orders,
+	Customers,
+	Analytics,
+	NotFoundPage,
+	Auth,
+} from "./pages";
 
 export const router = createBrowserRouter([
 	{

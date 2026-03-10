@@ -23,12 +23,13 @@ export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunct
 		req.userData = decoded;
 		next();
 	} catch (error) {
-		if (error instanceof jwt.JsonWebTokenError) {
-			return next(new AppError("Invalid token", 403));
-		}
 		if (error instanceof jwt.TokenExpiredError) {
-			return next(new AppError("Token expired", 403));
+			return next(new AppError("Token expired", 401));
 		}
+		if (error instanceof jwt.JsonWebTokenError) {
+			return next(new AppError("Invalid token", 401));
+		}
+		
 		next(error);
 	}
 };
