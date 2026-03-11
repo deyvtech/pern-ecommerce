@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 
-import { getUserByEmail } from "../../services/user.service.js";
+import { getUserByEmail, updateUserOTP } from "../../services/user.service.js";
 import { addUser } from "../../services/user.service.js";
 
 import { registerSchema } from "../../schemas/user.schemas.js";
@@ -37,34 +37,60 @@ export const registerController = async (
 
 		// Check if user Exists
 		const existingUser = await getUserByEmail(parsedUser.email);
-		if (existingUser) {
+		if (existingUser && existingUser.is_verified) {
 			throw new AppError("User already exist", 401);
 		}
 
-		// Send OTP
 		const otp = generateOTP();
-		const { emailError } = await sendOTP(
-			parsedUser.username,
-			parsedUser.email,
-			otp,
-		);
 
-		if (emailError) throw new AppError("Email has not been sent", 401);
+		// If user exists
+		if (
+			existingUser &&
+			!existingUser.is_verified &&
+			 existingUser.otp_expires_at < new Date()
+		) {
+			// Send OTP
+			const { emailError } = await sendOTP(
+				existingUser.username,
+				existingUser.email,
+				otp,
+			);
+			if (emailError) throw new AppError("Email has not been sent", 401);
 
-		// Save User to database
-		const user: User = {
-			username: parsedUser.username,
-			email: parsedUser.email,
-			password: hashedPassword,
-			otp: otp,
-		};
-		await addUser(user);
+			// Update OTP and OTP expiry time in database
+			await updateUserOTP(existingUser.email, otp);
 
-		// Response to the Client
-		logger.info(`User ${user.email} registered successfully`);
-		return res
-			.status(201)
-			.json({ success: true, message: "Registration successful" });
+			return res.status(200).json({
+				success: true,
+				message: "User already exists but not verified. OTP has been resent.",
+			})
+		}
+		// if user not exists
+		if (!existingUser) {
+			// Send OTP
+			const { emailError } = await sendOTP(
+				parsedUser.username,
+				parsedUser.email,
+				otp,
+			);
+
+			if (emailError) throw new AppError("Email has not been sent", 401);
+
+			// Save User to database
+			const user: User = {
+				username: parsedUser.username,
+				email: parsedUser.email,
+				password: hashedPassword,
+				otp: otp,
+			};
+			await addUser(user);
+
+			// Response to the Client
+			logger.info(`User ${user.email} registered successfully`);
+			return res
+				.status(201)
+				.json({ success: true, message: "Registration successful" });
+		}
 	} catch (error) {
 		next(error);
 	}

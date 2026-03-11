@@ -55,7 +55,7 @@ const emailTemplate = (username: string, otp: number) => {
       <p>If you did not request this, please ignore this email.</p>
 
       <div class="footer">
-        © ${new Date().getFullYear()} YourApp
+        © ${new Date().getFullYear()} E-commerce
       </div>
     </div>
   </body>

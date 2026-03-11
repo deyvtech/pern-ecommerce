@@ -1,7 +1,10 @@
 import * as z from "zod";
 
 const registerSchema = z.object({
-	username: z.string().min(3).max(100, "Username must be between 3 and 100 characters long"),
+	username: z
+		.string()
+		.min(3)
+		.max(100, "Username must be between 3 and 100 characters long"),
 	email: z.string().email("Invalid email address"),
 	password: z.string().min(6, "Password must be at least 6 characters long"),
 });
@@ -11,4 +14,12 @@ const loginSchema = z.object({
 	password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
-export { registerSchema, loginSchema };
+const verifyOTPSchema = z.object({
+	email: z.string().email("Invalid email address"),
+	otp: z
+		.string()
+		.min(6, "OTP must be at least 6 characters long")
+		.max(6, "OTP must be at most 6 characters long"),
+});
+
+export { registerSchema, loginSchema, verifyOTPSchema };

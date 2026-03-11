@@ -9,10 +9,15 @@ export const addUser = async (user: User) => {
 	console.log("Connected to the database");
 	try {
 		await client.query("BEGIN");
-		const expires_at = new Date(Date.now() + (60 * 5 * 1000)).toISOString()
+		const expires_at = new Date(Date.now() + 60 * 5 * 1000).toISOString();
 
 		const queryText = `INSERT INTO users(username, email, otp, otp_expires_at) VALUES($1, $2, $3, $4) RETURNING id`;
-		const res = await client.query(queryText, [user.username, user.email, user.otp, expires_at]);
+		const res = await client.query(queryText, [
+			user.username,
+			user.email,
+			user.otp,
+			expires_at,
+		]);
 
 		const queryText2 = `INSERT INTO user_auths(user_id, password_hash) VALUES($1, $2)`;
 		await client.query(queryText2, [res.rows[0].id, user.password]);
@@ -35,7 +40,9 @@ export const getUserByEmail = async (email: string) => {
         u.email, 
         u.role,
         u.is_active,
-        u.is_verified, 
+        u.is_verified,
+		u.otp,
+		u.otp_expires_at, 
         ua.password_hash
         FROM users u
         INNER JOIN user_auths ua ON u.id = ua.user_id 
@@ -60,7 +67,9 @@ export const getUserById = async (userId: string | undefined | null) => {
         u.email, 
         u.role,
         u.is_active,
-        u.is_verified
+        u.is_verified,
+		u.otp,
+		u.otp_expires_at
         FROM users u
         WHERE u.id = $1
     `;
@@ -69,6 +78,38 @@ export const getUserById = async (userId: string | undefined | null) => {
 		const result = await pool.query(query, values);
 		const data = result.rows[0];
 		return data;
+	} catch (error) {
+		logger.error(error);
+		throw new DatabaseError("Database query error", 500);
+	}
+};
+
+export const updateUserOTP = async (email: string, otp: number | null) => {
+	const { pool } = config;
+	const query = `
+		UPDATE users
+		SET otp = $1, otp_expires_at = $2
+		WHERE email = $3
+	`;
+	const expires_at = new Date(Date.now() + 60 * 5 * 1000).toISOString();
+	const values = [otp, expires_at, email];
+	try {
+		await pool.query(query, values);
+	} catch (error) {
+		logger.error(error);
+		throw new DatabaseError("Database query error", 500);
+	}
+};
+
+export const verifyUserOTP = async (email: string) => {
+	const { pool } = config;
+	const query = `
+		UPDATE users
+		SET otp = NULL, otp_expires_at = NULL, is_verified = TRUE
+		WHERE email = $1`;
+	const values = [email];
+	try {
+		await pool.query(query, values);
 	} catch (error) {
 		logger.error(error);
 		throw new DatabaseError("Database query error", 500);
