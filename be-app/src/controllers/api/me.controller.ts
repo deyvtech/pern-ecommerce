@@ -1,7 +1,11 @@
 import { type Response } from "express";
 import type { AuthRequest } from "../../types/request.types.js";
+import { getUserById } from "../../services/user.service.js";
 
-export const me = (req: AuthRequest, res: Response) => {
+export const me = async (req: AuthRequest, res: Response) => {
 	const { sub } = req.userData || {};
-	res.json({ success: true, user: { sub } });
+	try {
+		const { role } = await getUserById(sub);
+		res.json({ success: true, user: { role } });
+	} catch (error) {}
 };

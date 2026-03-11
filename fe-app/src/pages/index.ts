@@ -5,3 +5,4 @@ export { default as Customers } from "./Customers";
 export { default as Analytics } from "./Analytics";
 export { default as NotFoundPage } from "./NotFoundPage";
 export { default as Auth } from "./Auth";
+export { default as Me } from "./me";

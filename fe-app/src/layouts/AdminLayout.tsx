@@ -2,13 +2,9 @@ import { Outlet } from "react-router";
 import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import useAuth from "@/hooks/useAuth";
 const AdminLayout = () => {
-	const { auth } = useAuth();
-
 	return (
 		<>
-			{auth && (
 				<div className="flex h-screen w-screen gap-10">
 					<AdminSidebar />
 					<ScrollArea className="h-full w-full rounded-lg">
@@ -20,7 +16,6 @@ const AdminLayout = () => {
 						</div>
 					</ScrollArea>
 				</div>
-			)}
 		</>
 	);
 };

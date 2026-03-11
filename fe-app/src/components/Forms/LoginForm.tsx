@@ -20,6 +20,11 @@ import { useMutation } from "@tanstack/react-query";
 
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
+import { type AuthStateType } from "@/contexts/AuthProvider";
+interface ResponseAuthType extends AuthStateType {
+	message: string;
+	success: boolean;
+}
 
 const LoginForm = () => {
 	const { setAuth } = useAuth();
@@ -43,17 +48,18 @@ const LoginForm = () => {
 		onMutate: () => {
 			toast.loading("Logging in...");
 		},
-		onSuccess: (response: {
-			message: string;
-			success: boolean;
-			token: string;
-		}) => {
+		onSuccess: (response: ResponseAuthType) => {
 			toast.dismiss();
 			toast.success(response.message);
 			const token = response.token;
-			setAuth({token});
+			const user = response.user;
+			setAuth({ token, user });
 			form.reset();
-			navigate('/admin')
+			if (user.role === "admin") {
+				navigate("/admin");
+			} else {
+				navigate("/me");
+			}
 		},
 		onError: (error) => {
 			toast.dismiss();

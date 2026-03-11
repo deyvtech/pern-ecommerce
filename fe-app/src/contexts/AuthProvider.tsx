@@ -1,6 +1,10 @@
 import React from "react";
 export interface AuthStateType {
 	token: string | null;
+	user: {
+		role: 'admin' | 'customer'
+		name: string,
+	}
 };
 
 interface AuthContextType {

@@ -3,7 +3,7 @@ import * as zod from "zod";
 const tokenPayloadSchema = zod.object({
     sub: zod.string().uuid("Invalid user ID format"),
     role: zod.enum(["customer", "admin"], "Invalid user role"),
-    name: zod.string().min(1, "Name cannot be empty").max(100, "Name must be less than 100 characters"),
+    username: zod.string().min(1, "Username cannot be empty").max(100, "Username must be less than 100 characters"),
 })
 
 const refreshTokenValueSchema = zod.object({

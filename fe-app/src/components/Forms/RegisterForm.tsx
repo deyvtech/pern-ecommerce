@@ -21,7 +21,7 @@ const RegisterForm = () => {
 	const form = useForm<z.infer<typeof createUserSchema>>({
 		resolver: zodResolver(createUserSchema),
 		defaultValues: {
-			name: "",
+			username: "",
 			email: "",
 			password: "",
 		},
@@ -59,12 +59,12 @@ const RegisterForm = () => {
 		<form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
 			<FieldGroup>
 				<Controller
-					name="name"
+					name="username"
 					control={form.control}
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
 							<FieldLabel htmlFor={field.name}>
-								Full Name*
+								Username*
 							</FieldLabel>
 							<Input
 								{...field}
@@ -76,7 +76,7 @@ const RegisterForm = () => {
 								className="h-12 md:text-sm"
 							/>
 							<FieldDescription>
-								Please enter your name
+								Please enter your username
 							</FieldDescription>
 							{fieldState.invalid && (
 								<FieldError errors={[fieldState.error]} />

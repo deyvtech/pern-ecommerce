@@ -40,6 +40,7 @@ interface Config {
 	jwt_refresh_expires_in: string | number;
 	jwt_access_expires_in: string | number;
 	frontend_url?: string;
+	resend_api_key: string | undefined;
 }
 
 const config: Config = {
@@ -51,6 +52,7 @@ const config: Config = {
 	jwt_refresh_expires_in: getEnv("JWT_REFRESH_EXPIRES_IN"),
 	jwt_access_expires_in: getEnv("JWT_ACCESS_EXPIRES_IN"),
 	frontend_url: process.env.FRONTEND_URL || "http://localhost:5173",
+	resend_api_key: process.env.RESEND_API_KEY || undefined,
 };
 
 export default config;

@@ -9,9 +9,10 @@ export const addUser = async (user: User) => {
 	console.log("Connected to the database");
 	try {
 		await client.query("BEGIN");
+		const expires_at = new Date(Date.now() + (60 * 5 * 1000)).toISOString()
 
-		const queryText = `INSERT INTO users(name, email) VALUES($1, $2) RETURNING id`;
-		const res = await client.query(queryText, [user.name, user.email]);
+		const queryText = `INSERT INTO users(username, email, otp, otp_expires_at) VALUES($1, $2, $3, $4) RETURNING id`;
+		const res = await client.query(queryText, [user.username, user.email, user.otp, expires_at]);
 
 		const queryText2 = `INSERT INTO user_auths(user_id, password_hash) VALUES($1, $2)`;
 		await client.query(queryText2, [res.rows[0].id, user.password]);
@@ -30,7 +31,7 @@ export const getUserByEmail = async (email: string) => {
 	const query = `
         SELECT 
         u.id, 
-        u.name, 
+        u.username, 
         u.email, 
         u.role,
         u.is_active,
@@ -55,7 +56,7 @@ export const getUserById = async (userId: string | undefined | null) => {
 	const query = `
         SELECT 
         u.id, 
-        u.name, 
+        u.username, 
         u.email, 
         u.role,
         u.is_active,

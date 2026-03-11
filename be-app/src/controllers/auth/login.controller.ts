@@ -9,6 +9,7 @@ import { getUserByEmail } from "../../services/user.service.js";
 import { updateLogin } from "../../services/auth.service.js";
 // import types
 import type { TokenPayload } from "../../types/token.types.js";
+import type { UserResponseType } from "../../types/user.types.js";
 import type { Request, Response, NextFunction } from "express";
 // helper functions
 import logger from "../../utils/loggerHelper.js";
@@ -27,6 +28,8 @@ export const loginController = async (
 ) => {
 	const { email, password } = req.body;
 	try {
+
+		// Input Validation
 		const { email: parsedEmail, password: parsedPassword } =
 			await loginSchema.parseAsync({
 				email,
@@ -37,7 +40,6 @@ export const loginController = async (
 		const existingUser = await getUserByEmail(parsedEmail);
 		if (!existingUser) {
 			throw new AppError("Invalid email or password", 401);
-			// return res.status(401).json({success: false, message: "Invalid Email and Password"})
 		}
 
 		// Check if the password is correct
@@ -61,12 +63,14 @@ export const loginController = async (
 
 		// generate access token
 		const accessTokenPayload: TokenPayload = {
-			sub: existingUser.id
+			sub: existingUser.id,
 		};
 		const accessToken = signAccessToken(accessTokenPayload);
+
 		// generate refresh token
 		const jti = createJti();
 		const refreshToken = signRefreshToken(existingUser.id, jti);
+
 		// Save refresh token in DB
 		await persistRefreshToken({
 			userId: existingUser.id,
@@ -75,21 +79,26 @@ export const loginController = async (
 			ip: req.ip ?? req.socket.remoteAddress ?? "unknown",
 			userAgent: req.headers["user-agent"] || "Unknown Device",
 		});
+
+		// Add Refresh token to the cookie
 		setRefreshCookie(res, refreshToken);
 
 		// update user login db
 		await updateLogin(existingUser.id);
 
+		// Response to the client
 		logger.info(`User ${existingUser.email} logged in successful`);
-		return res.status(200).json({
+		const userResponse: UserResponseType = {
 			success: true,
 			message: "Logged in successful",
 			token: accessToken,
 			user: {
 				role: existingUser.role,
-				name: existingUser.name,
-			}
-		});
+				username: existingUser.username,
+				email: existingUser.email
+			},
+		};
+		return res.status(200).json(userResponse);
 	} catch (error: any) {
 		next(error);
 	}
