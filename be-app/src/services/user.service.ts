@@ -1,4 +1,4 @@
-import config from "../config.js";
+import config from "../config/config.js";
 import { DatabaseError } from "../middlewares/error.js";
 import logger from "../utils/loggerHelper.js";
 import type { User } from "../types/user.types.js";

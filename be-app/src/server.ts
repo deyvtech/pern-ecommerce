@@ -1,6 +1,6 @@
 import app from "./index.js";
 
-import config from "./config.js";
+import config from "./config/config.js";
 
 const PORT = config.port || 5000;
 

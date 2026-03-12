@@ -1,0 +1,52 @@
+import rateLimit from "express-rate-limit";
+import config from "../config/config.js";
+
+const windowMs = config.rate_limit_window_ms || 15 * 60 * 1000;
+
+const generalLimit = rateLimit({
+	windowMs,
+	max: config.rate_limit_max,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message: "Too many requests. Please try again later.",
+	},
+});
+
+const loginLimit = rateLimit({
+	windowMs,
+	max: config.auth_rate_limit_max,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message:
+			"Too many authentication attempt, Please try again after 15 minutes",
+	},
+	skipSuccessfulRequests: true,
+});
+
+const otpLimit = rateLimit({
+	windowMs: 5 * 60 * 1000, // 5 minutes
+	max: 1,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message: "Too many OTP request, Please try again after 5 minutes",
+	},
+});
+
+const refreshLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many token refresh requests.',
+  },
+});
+
+export { generalLimit, loginLimit, otpLimit, refreshLimiter };

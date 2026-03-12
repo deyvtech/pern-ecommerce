@@ -2,15 +2,16 @@ import React from "react";
 export interface AuthStateType {
 	token: string | null;
 	user: {
-		role: 'admin' | 'customer'
-		name: string,
-	}
-};
+		role: "admin" | "customer";
+		username: string;
+		email: string;
+	};
+}
 
 interface AuthContextType {
 	auth: AuthStateType | null;
 	setAuth: React.Dispatch<React.SetStateAction<AuthStateType | null>>;
-};
+}
 
 const AuthContext = React.createContext<AuthContextType | null>(null);
 

@@ -1,5 +1,6 @@
 export interface TokenPayload {
 	sub: string;
+	role: "admin" | "customer";
 }
 
 export interface RefreshTokenValue {
@@ -10,11 +11,10 @@ export interface RefreshTokenValue {
 	user_agent: string;
 }
 
-
 export interface PersistRefreshTokenParams {
-  userId: string;
-  refreshToken: string;
-  jti: string;
-  ip: string;
-  userAgent: string;
+	userId: string;
+	refreshToken: string;
+	jti: string;
+	ip: string;
+	userAgent: string;
 }

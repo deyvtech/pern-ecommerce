@@ -42,7 +42,9 @@ const LoginForm = () => {
 	// React Query / useMutation
 	const mutation = useMutation({
 		mutationFn: async (data: z.infer<typeof loginUserSchema>) => {
-			const response = await axios.post("/auth/login", data);
+			const response = await axios.post("/auth/login", data, {
+				headers: { withCredentials: true },
+			});
 			return response.data;
 		},
 		onMutate: () => {
@@ -51,9 +53,11 @@ const LoginForm = () => {
 		onSuccess: (response: ResponseAuthType) => {
 			toast.dismiss();
 			toast.success(response.message);
-			const token = response.token;
+			const accessToken = response.token;
 			const user = response.user;
-			setAuth({ token, user });
+			setAuth((prev) => {
+				return { ...prev, token: accessToken, user };
+			});
 			form.reset();
 			if (user.role === "admin") {
 				navigate("/admin");

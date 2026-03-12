@@ -11,32 +11,30 @@ import logger from "../../utils/loggerHelper.js";
 
 import type { User } from "../../types/user.types.js";
 
-import { sendOTP, generateOTP } from "../../utils/emailHelper.js";
+import { sendOTP, generateOTP } from "../../utils/otpHelper.js";
 
 export const registerController = async (
 	req: Request,
 	res: Response,
 	next: NextFunction,
 ) => {
-	const { username, email, password } = req.body;
-
 	try {
 		// Input Validations
-		const parsedUser = await registerSchema.parseAsync({
-			username,
-			email,
-			password,
-		});
+		const {
+			username: parsedUsername,
+			email: parsedEmail,
+			password: parsedPassword,
+		} = await registerSchema.parseAsync(req.body);
 
 		// Password Hashing
 		const saltedPassword = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(
-			parsedUser.password,
+			parsedPassword,
 			saltedPassword,
 		);
 
 		// Check if user Exists
-		const existingUser = await getUserByEmail(parsedUser.email);
+		const existingUser = await getUserByEmail(parsedEmail);
 		if (existingUser && existingUser.is_verified) {
 			throw new AppError("User already exist", 401);
 		}
@@ -47,7 +45,7 @@ export const registerController = async (
 		if (
 			existingUser &&
 			!existingUser.is_verified &&
-			 existingUser.otp_expires_at < new Date()
+			existingUser.otp_expires_at < new Date()
 		) {
 			// Send OTP
 			const { emailError } = await sendOTP(
@@ -62,15 +60,16 @@ export const registerController = async (
 
 			return res.status(200).json({
 				success: true,
-				message: "User already exists but not verified. OTP has been resent.",
-			})
+				message:
+					"User already exists but not verified. OTP has been resent.",
+			});
 		}
 		// if user not exists
 		if (!existingUser) {
 			// Send OTP
 			const { emailError } = await sendOTP(
-				parsedUser.username,
-				parsedUser.email,
+				parsedUsername,
+				parsedEmail,
 				otp,
 			);
 
@@ -78,8 +77,8 @@ export const registerController = async (
 
 			// Save User to database
 			const user: User = {
-				username: parsedUser.username,
-				email: parsedUser.email,
+				username: parsedUsername,
+				email: parsedEmail,
 				password: hashedPassword,
 				otp: otp,
 			};

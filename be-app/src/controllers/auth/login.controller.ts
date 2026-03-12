@@ -26,25 +26,19 @@ export const loginController = async (
 	res: Response,
 	next: NextFunction,
 ) => {
-	const { email, password } = req.body;
 	try {
-
 		// Input Validation
-		const { email: parsedEmail, password: parsedPassword } =
-			await loginSchema.parseAsync({
-				email,
-				password,
-			});
+		const { email, password } = await loginSchema.parseAsync(req.body);
 
 		// Check if the user exists
-		const existingUser = await getUserByEmail(parsedEmail);
+		const existingUser = await getUserByEmail(email);
 		if (!existingUser) {
 			throw new AppError("Invalid email or password", 401);
 		}
 
 		// Check if the password is correct
 		const comparePassword = await bcrypt.compare(
-			parsedPassword,
+			password,
 			existingUser.password_hash,
 		);
 		if (!comparePassword) {
@@ -64,6 +58,7 @@ export const loginController = async (
 		// generate access token
 		const accessTokenPayload: TokenPayload = {
 			sub: existingUser.id,
+			role: existingUser.role,
 		};
 		const accessToken = signAccessToken(accessTokenPayload);
 
@@ -95,7 +90,7 @@ export const loginController = async (
 			user: {
 				role: existingUser.role,
 				username: existingUser.username,
-				email: existingUser.email
+				email: existingUser.email,
 			},
 		};
 		return res.status(200).json(userResponse);

@@ -1,15 +1,20 @@
 import type { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import config from "../config.js";
+import config from "../config/config.js";
 
 import { AppError } from "./error.js";
 
 import type { AuthRequest } from "../types/request.types.js";
 import type { TokenPayload } from "../types/token.types.js";
 
-export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const verifyJWT = async (
+	req: AuthRequest,
+	res: Response,
+	next: NextFunction,
+) => {
 	try {
-		const authHeader = req.headers.authorization || req.headers.Authorization;
+		const authHeader =
+			req.headers.authorization || req.headers.Authorization;
 		if (!authHeader || !authHeader.toString().startsWith("Bearer ")) {
 			throw new AppError("Unauthorized", 401);
 		}
@@ -19,7 +24,10 @@ export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunct
 			throw new AppError("Unauthorized", 401);
 		}
 
-		const decoded = jwt.verify(token, config.jwt_access_secret) as TokenPayload;
+		const decoded = jwt.verify(
+			token,
+			config.jwt_access_secret,
+		) as TokenPayload;
 		req.userData = decoded;
 		next();
 	} catch (error) {
@@ -29,7 +37,7 @@ export const verifyJWT = async (req: AuthRequest, res: Response, next: NextFunct
 		if (error instanceof jwt.JsonWebTokenError) {
 			return next(new AppError("Invalid token", 401));
 		}
-		
+
 		next(error);
 	}
 };

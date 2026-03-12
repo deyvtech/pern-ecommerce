@@ -1,4 +1,8 @@
-import express, { type Request, type Response, type Application } from "express";
+import express, {
+	type Request,
+	type Response,
+	type Application,
+} from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -15,12 +19,15 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Global rate limiter
+import { generalLimit } from "./middlewares/rateLimiter.js";
+
 // Routes
 app.use("/auth", authRoutes);
-app.use("/api/v1", verifyJWT, apiRoutes);
-app.use('/auth/aa', (req, res) => {
-	console.log(req.cookies)
-	res.status(200).json({ success: true, message: "Token is valid" });
+app.use("/api/v1", generalLimit, verifyJWT, apiRoutes);
+app.use("/", (req: Request, res: Response) => {
+	res.json({ success: true, message: "Welcome to the API" });
 });
 // 404 Endpoint
 app.use(async (req: Request, res: Response) => {

@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "../../middlewares/error.js";
-import config from "../../config.js";
+import config from "../../config/config.js";
 import { hashToken, rotateRefreshToken } from "../../utils/tokenHelper.js";
 import {
 	getRefreshTokenAndUser,
@@ -25,12 +25,12 @@ export const refreshController = async (
 ) => {
 	try {
 		// Check if token is provided
-		let token = req.cookies?.jwt;
+		let token = req.cookies?.refreshToken;
 		if (!token) {
 			throw new AppError("No token provided", 401);
 		}
 		// Remove the refresh token in the cookie
-		res.clearCookie("jwt", {
+		res.clearCookie("refreshToken", {
 			httpOnly: true,
 			secure: config.env === "production",
 			sameSite: "lax",
@@ -69,6 +69,7 @@ export const refreshController = async (
 		// Rotate token or set Another token
 		const refreshTokenPayload: TokenPayload = {
 			sub: user.id,
+			role: user.role,
 		};
 		const { accessToken } = await rotateRefreshToken(
 			user.refresh_token_id,

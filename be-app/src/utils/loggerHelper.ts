@@ -1,5 +1,5 @@
 import winston from "winston";
-import config from "../config.js";
+import config from "../config/config.js";
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 // 1. Define your custom format
@@ -24,7 +24,10 @@ const logger = winston.createLogger({
 			),
 		}),
 		// Optional: Save errors to a file
-		new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+		new winston.transports.File({
+			filename: "logs/error.log",
+			level: "error",
+		}),
 		new winston.transports.File({ filename: "logs/combined.log" }),
 	],
 });
