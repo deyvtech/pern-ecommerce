@@ -8,10 +8,8 @@ import type {
 	PersistRefreshTokenParams,
 } from "../types/token.types.js";
 
-import {
-	addRefreshToken,
-	updateRefreshToken,
-} from "../services/token.service.js";
+
+import TokenModel from "../model/token.model.js";
 
 // FAST HASH: Always produces the exact same string, allowing instant database lookups
 const hashToken = (token: string) => {
@@ -48,7 +46,7 @@ const persistRefreshToken = async ({
 	userAgent,
 }: PersistRefreshTokenParams) => {
 	const tokenHash = hashToken(refreshToken);
-	await addRefreshToken({
+	await TokenModel.createRefreshToken({
 		user_id: userId,
 		token_hash: tokenHash,
 		jti,
@@ -76,7 +74,7 @@ const rotateRefreshToken = async (
 	res: Response,
 ) => {
 	const newJti = createJti();
-	await updateRefreshToken(refreshTokenId, newJti);
+	await TokenModel.updateRefreshToken(refreshTokenId, newJti);
 
 	const newAccessToken = signAccessToken(user);
 	const newRefreshToken = signRefreshToken(user.sub, newJti);

@@ -1,25 +1,7 @@
-// import packages
-import bcrypt from "bcryptjs";
-// import error middleware
-import { AppError } from "../../middlewares/error.js";
-// import validators
 import { loginSchema } from "../../schemas/user.schemas.js";
-// import services functions
-import { getUserByEmail } from "../../services/user.service.js";
-import { updateLogin } from "../../services/auth.service.js";
-// import types
-import type { TokenPayload } from "../../types/token.types.js";
-import type { UserResponseType } from "../../types/user.types.js";
 import type { Request, Response, NextFunction } from "express";
-// helper functions
-import logger from "../../utils/loggerHelper.js";
-import {
-	createJti,
-	persistRefreshToken,
-	setRefreshCookie,
-	signAccessToken,
-	signRefreshToken,
-} from "../../utils/tokenHelper.js";
+
+import { loginUser } from "../../services/auth/login.service.js";
 
 export const loginController = async (
 	req: Request,
@@ -28,72 +10,13 @@ export const loginController = async (
 ) => {
 	try {
 		// Input Validation
-		const { email, password } = await loginSchema.parseAsync(req.body);
-
-		// Check if the user exists
-		const existingUser = await getUserByEmail(email);
-		if (!existingUser) {
-			throw new AppError("Invalid email or password", 401);
-		}
-
-		// Check if the password is correct
-		const comparePassword = await bcrypt.compare(
-			password,
-			existingUser.password_hash,
+		const validatedData = await loginSchema.parseAsync(req.body);
+		const { status, success, message, token, user } = await loginUser(
+			validatedData,
+			req,
+			res,
 		);
-		if (!comparePassword) {
-			throw new AppError("Invalid email or password", 401);
-		}
-
-		// check if user is verified
-		if (!existingUser.is_verified) {
-			throw new AppError("User is not verified", 401);
-		}
-
-		// check if user is active
-		if (!existingUser.is_active) {
-			throw new AppError("User account is deactivated", 403);
-		}
-
-		// generate access token
-		const accessTokenPayload: TokenPayload = {
-			sub: existingUser.id,
-			role: existingUser.role,
-		};
-		const accessToken = signAccessToken(accessTokenPayload);
-
-		// generate refresh token
-		const jti = createJti();
-		const refreshToken = signRefreshToken(existingUser.id, jti);
-
-		// Save refresh token in DB
-		await persistRefreshToken({
-			userId: existingUser.id,
-			refreshToken,
-			jti,
-			ip: req.ip ?? req.socket.remoteAddress ?? "unknown",
-			userAgent: req.headers["user-agent"] || "Unknown Device",
-		});
-
-		// Add Refresh token to the cookie
-		setRefreshCookie(res, refreshToken);
-
-		// update user login db
-		await updateLogin(existingUser.id);
-
-		// Response to the client
-		logger.info(`User ${existingUser.email} logged in successful`);
-		const userResponse: UserResponseType = {
-			success: true,
-			message: "Logged in successful",
-			token: accessToken,
-			user: {
-				role: existingUser.role,
-				username: existingUser.username,
-				email: existingUser.email,
-			},
-		};
-		return res.status(200).json(userResponse);
+		return res.status(status).json({ success, message, token, user });
 	} catch (error: any) {
 		next(error);
 	}

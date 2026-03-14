@@ -8,6 +8,7 @@ export interface User {
 export interface UserResponseType {
 	success: boolean;
 	message: string;
-	token: string;
-	user: { role: "admin" | "customer"; username: string; email: string };
+	status: number,
+	token?: string;
+	user?: { role: "admin" | "customer"; username: string; email: string };
 }

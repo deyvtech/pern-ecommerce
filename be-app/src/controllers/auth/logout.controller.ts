@@ -1,9 +1,8 @@
-import config from "../../config/config.js";
 import logger from "../../utils/loggerHelper.js";
-import { hashToken } from "../../utils/tokenHelper.js";
-import { revokeUserTokens } from "../../services/token.service.js";
+
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../../middlewares/error.js";
+import { logoutUser } from "../../services/auth/logout.service.js";
 
 export const logoutController = async (
 	req: Request,
@@ -15,18 +14,10 @@ export const logoutController = async (
 		if (!token) {
 			return res.status(204);
 		}
-		const tokenHash = hashToken(token);
-		await revokeUserTokens(tokenHash);
-		res.clearCookie("refreshToken", {
-			httpOnly: true,
-			secure: config.env === "production",
-			sameSite: "lax",
-			path: "/auth",
-		});
-		logger.info("User logged out successfully");
-		res.status(200).json({
-			success: true,
-			message: "Logged out successfully",
+		const { status, success, message } = await logoutUser(token, res);
+		res.status(status).json({
+			success,
+			message,
 		});
 	} catch (error) {
 		logger.error("Error during logout", error);
