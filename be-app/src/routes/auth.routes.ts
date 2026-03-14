@@ -5,17 +5,18 @@ import { logoutController } from "../controllers/auth/logout.controller.js";
 import { refreshController } from "../controllers/auth/refresh.controller.js";
 import { verifyOTPController } from "../controllers/auth/verifyOTP.controller.js";
 import { resendOTPController } from "../controllers/auth/resendOTP.controller.js";
-
+import { forgotPasswordController } from "../controllers/auth/forgotPassword.controller.js";
 // rate limiter
-import { loginLimit, otpLimit, refreshLimiter } from "../middlewares/rateLimiter.js";
+import { loginLimit, otpLimit, refreshLimit, forgotPasswordLimit } from "../middlewares/rateLimiter.js";
 
 const router = express.Router();
 router.post("/login", loginLimit, loginController);
 router.post("/logout", logoutController);
 router.post("/register", registerController);
-router.post("/refresh", refreshLimiter, refreshController);
+router.post("/refresh", refreshLimit, refreshController);
 router.post("/verify", verifyOTPController);
 router.post("/resend-otp", otpLimit, resendOTPController);
+router.post("/forgot-password", forgotPasswordLimit, forgotPasswordController);
 
 
 export default router;

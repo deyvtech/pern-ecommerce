@@ -30,7 +30,7 @@ export const loginUser = async (
 	const { email, password }: z.infer<typeof loginSchema> = validatedData;
 	const existingUser = await UserModel.findByEmail(email);
 	if (!existingUser) {
-		throw new AppError("Invalid email or password", 401);
+		throw new AppError("User doesn't exists", 400);
 	}
 
 	// Check if the password is correct
@@ -39,7 +39,7 @@ export const loginUser = async (
 		existingUser.password_hash,
 	);
 	if (!comparePassword) {
-		throw new AppError("Invalid email or password", 401);
+		throw new AppError("Invalid email or password", 400);
 	}
 
 	// check if user is verified

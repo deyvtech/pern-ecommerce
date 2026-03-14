@@ -7,7 +7,8 @@ import { AppError } from "../../middlewares/error.js";
 // import schemas
 import { registerSchema } from "../../schemas/user.schemas.js";
 // import utils
-import { generateOTP, sendOTP } from "../../utils/otpHelper.js";
+import { generateOTP  } from "../../utils/otpHelper.js";
+import { sendOTP } from "../../utils/sendEmail.js";
 import logger from "../../utils/loggerHelper.js";
 // types
 import type { UserResponseType, User } from "../../types/user.types.js";
@@ -27,7 +28,7 @@ export const registerUser = async (
 	// Check if user Exists
 	const existingUser = await UserModel.findByEmail(parsedEmail);
 	if (existingUser && existingUser.is_verified) {
-		throw new AppError("User already exist", 401);
+		throw new AppError("User already exist", 400);
 	}
 
 	const otp = generateOTP();
@@ -44,7 +45,7 @@ export const registerUser = async (
 			existingUser.email,
 			otp,
 		);
-		if (emailError) throw new AppError("Email has not been sent", 401);
+		if (emailError) throw new AppError("Email has not been sent", 500);
 
 		// Update OTP and OTP expiry time in database
 		await UserModel.updateOTP(existingUser.email, otp);
@@ -59,7 +60,7 @@ export const registerUser = async (
 	// Send OTP
 	const { emailError } = await sendOTP(parsedUsername, parsedEmail, otp);
 
-	if (emailError) throw new AppError("Email has not been sent", 401);
+	if (emailError) throw new AppError("Email has not been sent", 500);
 
 	// Save User to database
 	const user: User = {

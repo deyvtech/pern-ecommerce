@@ -37,7 +37,7 @@ export const refreshUserToken = async (
 			config.jwt_refresh_secret,
 		) as refreshTokenPayload;
 	} catch (error) {
-		throw new AppError("Invalid or expired token", 401);
+		throw new AppError("Invalid or expired token", 400);
 	}
 
 	// Hash the token and get User from this token
@@ -47,16 +47,16 @@ export const refreshUserToken = async (
 		decoded.jti,
 	);
 	if (!user) {
-		throw new AppError("Token not found", 401);
+		throw new AppError("Token not found", 400);
 	}
 	if (user.revoked_at) {
 		// TODO: Implement revoke all token from this specific user functionality
 		// TODO: implement send email notification to user when refresh token is revoked
 		// await TokenModel.deleteRefreshToken(user.refresh_token_id);
-		throw new AppError("Token is revoked", 401);
+		throw new AppError("Token is revoked", 400);
 	}
 	if (new Date(user.expires_at) < new Date()) {
-		throw new AppError("Token is expired", 401);
+		throw new AppError("Token is expired", 400);
 	}
 	if (!user.is_active) {
 		throw new AppError("User account is deactivated", 403);

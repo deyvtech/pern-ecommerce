@@ -38,15 +38,33 @@ const otpLimit = rateLimit({
 	},
 });
 
-const refreshLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: 'Too many token refresh requests.',
-  },
+const forgotPasswordLimit = rateLimit({
+	windowMs: 60 * 60 * 1000, // 1 hour
+	max: 5,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message:
+			"Too many forgot password requests, Please try again after 1 hour",
+	},
 });
 
-export { generalLimit, loginLimit, otpLimit, refreshLimiter };
+const refreshLimit = rateLimit({
+	windowMs: 60 * 1000,
+	max: 10,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message: "Too many token refresh requests.",
+	},
+});
+
+export {
+	generalLimit,
+	loginLimit,
+	otpLimit,
+	refreshLimit,
+	forgotPasswordLimit,
+};

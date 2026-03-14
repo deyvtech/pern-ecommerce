@@ -2,7 +2,7 @@ import config from "../config/config.js";
 import { DatabaseError } from "../middlewares/error.js";
 import logger from "../utils/loggerHelper.js";
 import type { RefreshTokenValue } from "../types/token.types.js";
-
+import { generateExpirationDate } from "../utils/expiresAt.js";
 const TokenModel = {
 	findRefreshTokenAndUser: async (tokenHash: string, jti: string) => {
 		const query = `
@@ -34,7 +34,7 @@ const TokenModel = {
 
 		const REFRESH_TTL_SEC = 60 * 60 * 24 * 7;
 
-		const expires_at = new Date(Date.now() + REFRESH_TTL_SEC * 1000);
+		const expires_at = generateExpirationDate(REFRESH_TTL_SEC * 1000);
 
 		const query = `INSERT INTO refresh_tokens (user_id, token_hash, jti, expires_at, ip_address, user_agent) VALUES ($1, $2, $3, $4, $5, $6)`;
 		const values = [

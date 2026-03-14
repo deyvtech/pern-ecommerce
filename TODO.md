@@ -7,9 +7,9 @@
 - [x] Refresh token generation and storage
 - [x] Token validation and verification
 - [x] Token revocation and logout
-- [ ] Rate limiting for authentication endpoints
-- [ ] OTP verification for registration and login
-- [ ] Password reset functionality
+- [x] Rate limiting for authentication endpoints
+- [x] OTP verification for registration and login
+- [ ] Reset password
 
 ## Product Management
 - [ ] CRUD operations for products 

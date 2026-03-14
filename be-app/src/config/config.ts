@@ -43,6 +43,7 @@ interface Config {
 	rate_limit_window_ms: number;
 	rate_limit_max: number;
 	auth_rate_limit_max: number;
+	email_sender: string;
 }
 
 const config: Config = {
@@ -60,6 +61,7 @@ const config: Config = {
 	rate_limit_window_ms: Number(process.env.RATE_LIMIT_WINDOW_MS),
 	rate_limit_max: Number(process.env.RATE_LIMIT_MAX) || 100,
 	auth_rate_limit_max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 10,
+	email_sender: process.env.EMAIL_SENDER || "E-commerce <noreply@deyv.codes>",
 };
 
 export default config;

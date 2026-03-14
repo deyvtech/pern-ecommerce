@@ -2,16 +2,14 @@ import config from "../config/config.js";
 import { DatabaseError } from "../middlewares/error.js";
 import logger from "../utils/loggerHelper.js";
 import type { User } from "../types/user.types.js";
-
+import { generateExpirationDate } from "../utils/expiresAt.js";
 const UserModel = {
 	create: async (user: User) => {
 		const client = await config.pool.connect();
 		console.log("Connected to the database");
 		try {
 			await client.query("BEGIN");
-			const expires_at = new Date(
-				Date.now() + 60 * 5 * 1000,
-			).toISOString();
+			const expires_at = generateExpirationDate(60 * 5 * 1000);
 
 			const queryText = `INSERT INTO users(username, email, otp, otp_expires_at) VALUES($1, $2, $3, $4) RETURNING id`;
 			const res = await client.query(queryText, [
@@ -100,7 +98,7 @@ const UserModel = {
 		SET otp = $1, otp_expires_at = $2
 		WHERE email = $3
 	`;
-		const expires_at = new Date(Date.now() + 60 * 5 * 1000).toISOString();
+		const expires_at = generateExpirationDate(60 * 5 * 1000);
 		const values = [otp, expires_at, email];
 		try {
 			await config.pool.query(query, values);
@@ -120,5 +118,23 @@ const UserModel = {
 			throw new DatabaseError("Database query error", 500);
 		}
 	},
+	createUserResetToken: async (resetToken: string, email: string) => {
+		const resetTokenExpiresAt = generateExpirationDate(1000 * 60 * 15);
+		try {
+			const query = `
+			UPDATE users 
+			SET reset_token = $1, 
+			reset_token_expires_at = $2 
+			WHERE email = $3`;
+			const values = [resetToken, resetTokenExpiresAt, email];
+			await config.pool.query(query, values);
+		} catch (error) {
+			logger.error(error);
+			throw new DatabaseError("Database query error", 500);
+		}
+	},
+	verifyResetToken: () => {
+
+	}
 };
-export default UserModel
+export default UserModel;

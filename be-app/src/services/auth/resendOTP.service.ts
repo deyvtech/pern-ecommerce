@@ -1,6 +1,7 @@
 import z from "zod";
 
-import { generateOTP, sendOTP } from "../../utils/otpHelper.js";
+import { generateOTP } from "../../utils/otpHelper.js";
+import { sendOTP } from "../../utils/sendEmail.js";
 import UserModel from "../../model/user.model.js";
 import { AppError } from "../../middlewares/error.js";
 import { resendOTPSchema } from "../../schemas/otp.schema.js";
@@ -11,10 +12,11 @@ export const resendUserOTP = async (
 	validatedData: z.infer<typeof resendOTPSchema>,
 ): Promise<UserResponseType> => {
 	const { email }: z.infer<typeof resendOTPSchema> = validatedData;
-	const { username } = await UserModel.findByEmail(email);
+	const existingUser = await UserModel.findByEmail(email);
+	if (!existingUser) throw new AppError("User doesn't exist", 400);
 	const otp = generateOTP();
-	const { emailError } = await sendOTP(username, email, otp);
-	if (emailError) throw new AppError("Email has not been sent", 401);
+	const { emailError } = await sendOTP(existingUser.username, email, otp);
+	if (emailError) throw new AppError("Email has not been sent", 500);
 	await UserModel.updateOTP(email, otp);
 	const userResponse: UserResponseType = {
 		status: 200,
