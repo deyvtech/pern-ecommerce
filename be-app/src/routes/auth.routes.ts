@@ -6,6 +6,7 @@ import { refreshController } from "../controllers/auth/refresh.controller.js";
 import { verifyOTPController } from "../controllers/auth/verifyOTP.controller.js";
 import { resendOTPController } from "../controllers/auth/resendOTP.controller.js";
 import { forgotPasswordController } from "../controllers/auth/forgotPassword.controller.js";
+import { resetPasswordController } from "../controllers/auth/resetPassword.controller.js";
 // rate limiter
 import { loginLimit, otpLimit, refreshLimit, forgotPasswordLimit } from "../middlewares/rateLimiter.js";
 
@@ -17,6 +18,7 @@ router.post("/refresh", refreshLimit, refreshController);
 router.post("/verify", verifyOTPController);
 router.post("/resend-otp", otpLimit, resendOTPController);
 router.post("/forgot-password", forgotPasswordLimit, forgotPasswordController);
+router.post("/reset-password", forgotPasswordLimit, resetPasswordController);
 
 
 export default router;

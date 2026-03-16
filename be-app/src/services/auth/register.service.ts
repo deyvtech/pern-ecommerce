@@ -10,6 +10,7 @@ import { registerSchema } from "../../schemas/user.schemas.js";
 import { generateOTP  } from "../../utils/otpHelper.js";
 import { sendOTP } from "../../utils/sendEmail.js";
 import logger from "../../utils/loggerHelper.js";
+import { hashPassword } from "../../utils/hashPassword.js";
 // types
 import type { UserResponseType, User } from "../../types/user.types.js";
 
@@ -22,8 +23,7 @@ export const registerUser = async (
 		password: parsedPassword,
 	}: z.infer<typeof registerSchema> = validatedData;
 	// Password Hashing
-	const saltedPassword = await bcrypt.genSalt(10);
-	const hashedPassword = await bcrypt.hash(parsedPassword, saltedPassword);
+	const hashedPassword = await hashPassword(parsedPassword);
 
 	// Check if user Exists
 	const existingUser = await UserModel.findByEmail(parsedEmail);

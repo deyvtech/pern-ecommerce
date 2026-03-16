@@ -56,12 +56,12 @@ const config: Config = {
 		getEnv("JWT_ACCESS_SECRET") || "agalagamMOGO_access_secret",
 	jwt_refresh_expires_in: getEnv("JWT_REFRESH_EXPIRES_IN"),
 	jwt_access_expires_in: getEnv("JWT_ACCESS_EXPIRES_IN"),
-	frontend_url: process.env.FRONTEND_URL || "http://localhost:5173",
-	resend_api_key: process.env.RESEND_API_KEY || undefined,
-	rate_limit_window_ms: Number(process.env.RATE_LIMIT_WINDOW_MS),
-	rate_limit_max: Number(process.env.RATE_LIMIT_MAX) || 100,
-	auth_rate_limit_max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 10,
-	email_sender: process.env.EMAIL_SENDER || "E-commerce <noreply@deyv.codes>",
+	frontend_url: getEnv("FRONTEND_URL") || "http://localhost:5173",
+	resend_api_key: getEnv("RESEND_API_KEY") || '',
+	rate_limit_window_ms: Number(getEnv("RATE_LIMIT_WINDOW_MS"))  || 15 * 60 * 1000,
+	rate_limit_max: Number(getEnv("RATE_LIMIT_MAX")) || 100,
+	auth_rate_limit_max: Number(getEnv("AUTH_RATE_LIMIT_MAX")) || 10,
+	email_sender: getEnv("EMAIL_SENDER") || "E-commerce <noreply@deyv.codes>",
 };
 
 export default config;

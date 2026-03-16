@@ -46,7 +46,7 @@ FRONTEND_URL=http://localhost:5173
 3. Install frontend dependencies:
 
 ```bash
-cd ../fe-app
+cd fe-app
 npm install
 ```
 

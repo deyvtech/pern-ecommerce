@@ -10,6 +10,7 @@
 - [x] Rate limiting for authentication endpoints
 - [x] OTP verification for registration and login
 - [ ] Reset password
+- [x] Forgot Password
 
 ## Product Management
 - [ ] CRUD operations for products 
@@ -22,10 +23,7 @@
 
 ## User authentication
 - [ ] Authentication forms (login and registration)
-    - [ 
-
-        
-    ] Token management (storing and refreshing tokens)
+    - [ ] Token management (storing and refreshing tokens)
     - [x] Register and login UI components
     - [ ] Error handling and validation feedback
 

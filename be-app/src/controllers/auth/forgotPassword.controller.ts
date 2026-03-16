@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { resetPasswordSchema } from "../../schemas/user.schemas.js";
+import { forgotPasswordSchema } from "../../schemas/user.schemas.js";
 import { forgotUserPassword } from "../../services/auth/forgotPassword.service.js";
 
 export const forgotPasswordController = async (
@@ -8,7 +8,7 @@ export const forgotPasswordController = async (
 	next: NextFunction,
 ) => {
 	try {
-		const validatedData = await resetPasswordSchema.parseAsync(req.body);
+		const validatedData = await forgotPasswordSchema.parseAsync(req.body);
 		const { status, success, message } =
 			await forgotUserPassword(validatedData);
 			

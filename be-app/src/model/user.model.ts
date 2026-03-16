@@ -108,11 +108,10 @@ const UserModel = {
 		}
 	},
 	updateUserLogin: async (userId: string) => {
+		const query = `UPDATE users SET last_sign_in_at = NOW() WHERE id = $1`;
+		const values = [userId];
 		try {
-			await config.pool.query(
-				`UPDATE users SET last_sign_in_at = NOW() WHERE id = $1`,
-				[userId],
-			);
+			await config.pool.query(query, values);
 		} catch (error) {
 			logger.error(error);
 			throw new DatabaseError("Database query error", 500);
@@ -133,8 +132,54 @@ const UserModel = {
 			throw new DatabaseError("Database query error", 500);
 		}
 	},
-	verifyResetToken: () => {
-
+	findByToken: async (resetToken: string | undefined) => {
+		const query = `
+		SELECT
+		id,
+		email,
+		reset_token,
+		reset_token_expires_at
+		FROM users
+		WHERE reset_token = $1;
+		`;
+		const values = [resetToken]
+		try {
+			const result = await config.pool.query(query, values)
+			const data = result.rows[0];
+			return data
+		} catch (error) {
+			logger.error(error);
+			throw new DatabaseError('Database query error', 500);
+		}
+	},
+	updateUserPassword: async (password: string, id: string) => {
+		const query = `
+		UPDATE user_auths 
+		SET password_hash = $1 
+		WHERE user_id = $2
+		`
+		const values = [password, id]
+		try {
+			await config.pool.query(query, values)
+		} catch (error) {
+			logger.error(error)
+			throw new DatabaseError('Database query error', 500)
+		}
+	},
+	updateResetToken: async (id: string) => {
+		
+		const query = `
+		UPDATE users 
+		SET reset_token = NULL
+		WHERE id = $1
+		`
+		const values = [id]
+		try {
+			await config.pool.query(query, values)
+		} catch (error) {
+			logger.error(error)
+			throw new DatabaseError('Database query error', 500)
+		}
 	}
 };
 export default UserModel;
