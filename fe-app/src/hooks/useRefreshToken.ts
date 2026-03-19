@@ -1,21 +1,20 @@
 import axios from "@/api/axios";
 import useAuth from "@/hooks/useAuth";
+import { useCallback } from "react";
+
 const useRefreshToken = () => {
-	const { setAuth } = useAuth();
+    const { setAuth } = useAuth();
 
-	const refresh = async () => {
-		const { data } = await axios.get("/auth/refresh", {
-			withCredentials: true,
-		});
-		const accessToken = data.token;
-		const user = data.user;
-		setAuth((prev) => {
-			return { ...prev, token: accessToken, user };
-		});
-		return accessToken;
-	};
+    const refresh = useCallback(async () => {
+        const response = await axios.post("/auth/refresh", {}, {
+            withCredentials: true,
+        });
+        const { token, user } = response.data;
+        setAuth({ token, user });
+        return token;
+    }, [setAuth]);
 
-	return refresh;
+    return refresh;
 };
 
 export default useRefreshToken;

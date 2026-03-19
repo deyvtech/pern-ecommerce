@@ -9,7 +9,7 @@ export default axios.create({
 
 export { isAxiosError };
 
-export const privateInstance = axios.create({
+export const axiosPrivate = axios.create({
 	baseURL: import.meta.env.VITE_EXPRESS_API_URL,
 	headers: { "Content-Type": "application/json" },
 	withCredentials: true,

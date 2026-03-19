@@ -49,7 +49,7 @@ interface Config {
 const config: Config = {
 	port: process.env.PORT || 5000,
 	pool: pool,
-	env: getEnv("NODE_ENV"),
+	env: getEnv("NODE_ENV") || "development",
 	jwt_refresh_secret:
 		getEnv("JWT_REFRESH_SECRET") || "agalagamMOGO_refresh_secret",
 	jwt_access_secret:

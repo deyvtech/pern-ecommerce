@@ -1,10 +1,12 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router"; // Make sure it's react-router-dom if using DOM
 
-// Layouts
+// Layouts & Wrappers
 import WrapperLayout from "@/layouts/WrapperLayout";
 import AdminLayout from "@/layouts/AdminLayout";
 import AuthLayout from "@/layouts/AuthLayout";
 import ProtectedRoutes from "@/ProtectedRoutes";
+import PersistentLogin from "@/layouts/PersistentLogin"; // Add this import!
+
 // Pages
 import {
 	Dashboard,
@@ -19,63 +21,52 @@ import Me from "./pages/me";
 
 export const router = createBrowserRouter([
 	{
-		path: "/",
-		Component: WrapperLayout,
+		element: <PersistentLogin />, 
 		children: [
 			{
-				element: (
-					<ProtectedRoutes allowedRoles={["admin"]} />
-				),
+				path: "/",
+				Component: WrapperLayout,
 				children: [
+					// --- ADMIN ROUTES ---
 					{
-						path: "/admin",
-						Component: AdminLayout,
+						element: <ProtectedRoutes allowedRoles={["admin"]} />,
 						children: [
 							{
-								index: true,
-								Component: Dashboard,
+								path: "admin", 
+								Component: AdminLayout,
+								children: [
+									{ index: true, Component: Dashboard },
+									{ path: "products", Component: Products },
+									{ path: "orders", Component: Orders },
+									{ path: "customers", Component: Customers },
+									{ path: "analytics", Component: Analytics },
+								],
 							},
+						],
+					},
+					// --- STANDARD USER ROUTES ---
+					{
+						element: <ProtectedRoutes />,
+						children: [
 							{
-								path: "products",
-								Component: Products,
-							},
+								path: "me",
+								Component: Me
+							}
+						]
+					},
+					// --- PUBLIC ROUTES ---
+					{
+						Component: AuthLayout,
+						children: [
 							{
-								path: "orders",
-								Component: Orders,
-							},
-							{
-								path: "customers",
-								Component: Customers,
-							},
-							{
-								path: "analytics",
-								Component: Analytics,
+								path: "auth",
+								Component: Auth,
 							},
 						],
 					},
 				],
 			},
-			// Login User Only
-			{
-				element: <ProtectedRoutes />,
-				children: [
-					{
-						path: "me",
-						Component: Me
-					}
-				]
-			},
-			// No Protected
-			{
-				Component: AuthLayout,
-				children: [
-					{
-						path: "auth",
-						Component: Auth,
-					},
-				],
-			},
-		],
+		]
 	},
 	{
 		path: "*",

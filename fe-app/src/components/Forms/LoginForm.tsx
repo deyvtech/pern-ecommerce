@@ -43,7 +43,7 @@ const LoginForm = () => {
 	const mutation = useMutation({
 		mutationFn: async (data: z.infer<typeof loginUserSchema>) => {
 			const response = await axios.post("/auth/login", data, {
-				headers: { withCredentials: true },
+				withCredentials: true,
 			});
 			return response.data;
 		},

@@ -4,7 +4,7 @@ import logger from "../utils/loggerHelper.js";
 import type { RefreshTokenValue } from "../types/token.types.js";
 import { generateExpirationDate } from "../utils/expiresAt.js";
 const TokenModel = {
-	findRefreshTokenAndUser: async (tokenHash: string, jti: string) => {
+	findRefreshTokenAndUser: async (jti: string) => {
 		const query = `
 	SELECT 
 	u.id, 
@@ -17,9 +17,9 @@ const TokenModel = {
 	rt.expires_at  
 	FROM refresh_tokens rt
 	INNER JOIN users u ON u.id = rt.user_id
-	WHERE rt.token_hash = $1 AND rt.jti = $2;
+	WHERE rt.jti = $1;
 	`;
-		const values = [tokenHash, jti];
+		const values = [jti];
 		try {
 			const result = await config.pool.query(query, values);
 			return result.rows[0];

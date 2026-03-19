@@ -27,7 +27,7 @@ export const refreshUserToken = async (
 		httpOnly: true,
 		secure: config.env === "production",
 		sameSite: "lax",
-		path: "/auth/refresh",
+		path: "/auth",
 	});
 	//Verify the token
 	let decoded: refreshTokenPayload;
@@ -41,9 +41,7 @@ export const refreshUserToken = async (
 	}
 
 	// Hash the token and get User from this token
-	const tokenHash = hashToken(token);
 	const user = await TokenModel.findRefreshTokenAndUser(
-		tokenHash,
 		decoded.jti,
 	);
 	if (!user) {
