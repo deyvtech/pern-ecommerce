@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -26,7 +27,7 @@ interface ResponseAuthType extends AuthStateType {
 	success: boolean;
 }
 
-const LoginForm = () => {
+const LoginForm = ({ handleActiveTab }: { handleActiveTab: Dispatch<SetStateAction<string>> }) => {
 	const { setAuth } = useAuth();
 	const navigate = useNavigate();
 
@@ -82,71 +83,81 @@ const LoginForm = () => {
 	}
 
 	return (
-		<form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-			<FieldGroup>
-				<Controller
-					name="email"
-					control={form.control}
-					render={({ field, fieldState }) => (
-						<Field data-invalid={fieldState.invalid}>
-							<FieldLabel htmlFor={field.name}>
-								Email Address*
-							</FieldLabel>
-							<Input
-								{...field}
-								id={field.name}
-								type="text"
-								placeholder="e.g., john.doe@example.com"
-								aria-invalid={fieldState.invalid}
-								autoComplete="off"
-								className="h-12 md:text-sm"
-							/>
-							<FieldDescription>
-								We'll never share your email with anyone else.
-							</FieldDescription>
-							{fieldState.invalid && (
-								<FieldError errors={[fieldState.error]} />
-							)}
-						</Field>
-					)}
-				/>
-			</FieldGroup>
-			<FieldGroup className="mt-6">
-				<Controller
-					name="password"
-					control={form.control}
-					render={({ field, fieldState }) => (
-						<Field data-invalid={fieldState.invalid}>
-							<FieldLabel htmlFor={field.name}>
-								Password*
-							</FieldLabel>
-							<Input
-								{...field}
-								id={field.name}
-								type="password"
-								placeholder="Please enter your password"
-								aria-invalid={fieldState.invalid}
-								autoComplete="off"
-								className="h-12 md:text-sm"
-							/>
-							<FieldDescription>
-								Your password must be at least 6 characters
-								long.
-							</FieldDescription>
-							{fieldState.invalid && (
-								<FieldError errors={[fieldState.error]} />
-							)}
-						</Field>
-					)}
-				/>
-			</FieldGroup>
+		<>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+				<FieldGroup>
+					<Controller
+						name="email"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor={field.name}>
+									Email Address<span className="text-red-700">*</span>
+								</FieldLabel>
+								<Input
+									{...field}
+									id={field.name}
+									type="email"
+									placeholder="e.g., john.doe@example.com"
+									aria-invalid={fieldState.invalid}
+									autoComplete="off"
+									className="h-12 md:text-sm"
+								/>
+								<FieldDescription>
+									We'll never share your email with anyone
+									else.
+								</FieldDescription>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+				</FieldGroup>
+				<FieldGroup className="mt-6">
+					<Controller
+						name="password"
+						control={form.control}
+						render={({ field, fieldState }) => (
+							<Field data-invalid={fieldState.invalid}>
+								<FieldLabel htmlFor={field.name}>
+									Password<span className="text-red-700">*</span>
+								</FieldLabel>
+								<Input
+									{...field}
+									id={field.name}
+									type="password"
+									placeholder="Please enter your password"
+									aria-invalid={fieldState.invalid}
+									autoComplete="off"
+									className="h-12 md:text-sm"
+								/>
+								<FieldDescription>
+									Your password must be at least 6 characters
+									long.
+								</FieldDescription>
+								{fieldState.invalid && (
+									<FieldError errors={[fieldState.error]} />
+								)}
+							</Field>
+						)}
+					/>
+				</FieldGroup>
+				<Button
+					size="lg"
+					className={`w-full text-sm p-6 mt-4 cursor-pointer ${mutation.isPending ? "cursor-not-allowed opacity-50" : ""}`}
+				>
+					{mutation.isPending ? "Logging in..." : "Login"}
+				</Button>
+			</form>
 			<Button
-				size="lg"
-				className={`w-full text-sm p-6 mt-4 cursor-pointer ${mutation.isPending ? "cursor-not-allowed opacity-50" : ""}`}
+				variant="link"
+				className="ml-auto mt-2 cursor-pointer"
+				onClick={() => handleActiveTab("forgot-password")}
 			>
-				{mutation.isPending ? "Logging in..." : "Login"}
+				Forgot Password?
 			</Button>
-		</form>
+		</>
 	);
 };
 

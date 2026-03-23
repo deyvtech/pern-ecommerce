@@ -24,7 +24,7 @@ export const forgotUserPassword = async (
 	const resetTokenHash = hashToken(resetToken);
 	await UserModel.createUserResetToken(resetTokenHash, existingUser.email)
 
-	const resetLink = `${config.frontend_url}auth/reset-password?token=${resetToken}`;
+	const resetLink = `${config.frontend_url}/auth/reset-password?token=${resetToken}`;
 	const { emailError } = await sendResetPassword(
 		existingUser.username,
 		existingUser.email,

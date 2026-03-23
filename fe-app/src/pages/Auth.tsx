@@ -1,35 +1,62 @@
-'use client';
-import React from "react";
+"use client";
+import React, { act } from "react";
 
 import LoginForm from "@/components/Forms/LoginForm";
 import RegisterForm from "@/components/Forms/RegisterForm";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ForgotPasswordForm from "@/components/Forms/ForgotPasswordForm";
 const Auth = () => {
 	const [activeTab, setActiveTab] = React.useState("login");
 	return (
 		<div className="pt-50 h-full flex flex-col  gap-10 max-w-xl w-full mx-auto">
-			<h1 className="text-4xl text-center">{activeTab === "login" ? "Welcome Back!" : "Create an Account"}</h1>
-			<Tabs defaultValue="login" className="min-w-full" onValueChange={setActiveTab}>
-				<TabsList className="flex w-full justify-start mb-4 bg-slate-800 md:h-12">
-					<TabsTrigger value="login" className="text-sm font-normal cursor-pointer">
-						Sign In
-					</TabsTrigger>
-					<TabsTrigger value="register" className="text-sm font-normal cursor-pointer">
-						Register
-					</TabsTrigger>
-				</TabsList>
+			<h1 className="text-4xl text-center">
+				{activeTab === "login"
+					? "Welcome Back!"
+					: activeTab === "register"
+						? "Create an Account"
+						: "Reset Password"}
+			</h1>
+			<Tabs
+				defaultValue="login"
+				className="min-w-full"
+				value={activeTab}
+				onValueChange={setActiveTab}
+			>
+				{activeTab !== "forgot-password" && (
+					<TabsList className="flex w-full justify-start mb-4 bg-slate-800 md:h-12">
+						<TabsTrigger
+							value="login"
+							className="text-sm font-normal cursor-pointer"
+						>
+							Sign In
+						</TabsTrigger>
+						<TabsTrigger
+							value="register"
+							className="text-sm font-normal cursor-pointer"
+						>
+							Register
+						</TabsTrigger>
+					</TabsList>
+				)}
+
 				<TabsContent value="login">
-					<LoginForm />
+					<LoginForm handleActiveTab={setActiveTab} />
 				</TabsContent>
 				<TabsContent value="register">
 					<RegisterForm />
 				</TabsContent>
+				<TabsContent value="forgot-password">
+					<ForgotPasswordForm />
+				</TabsContent>
 			</Tabs>
+
 			<div className="flex justify-between items-center gap-2 w-full">
 				<div className="flex-1 h-0.5 bg-slate-300"></div>
-				<p className="text-gray-500 w-fit">Or {activeTab === "login" ? "Login" : "Register"} with</p>
+				<p className="text-gray-500 w-fit">
+					Or {activeTab === "login" ? "Login" : "Register"} with
+				</p>
 				<div className="flex-1 h-0.5 bg-slate-300"></div>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -39,7 +66,12 @@ const Auth = () => {
 					className="w-full p-6 text-sm cursor-pointer hover:opacity-80"
 				>
 					Google
-					<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 48 48">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="2"
+						height="2"
+						viewBox="0 0 48 48"
+					>
 						<path
 							fill="#FFC107"
 							d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917"
@@ -63,8 +95,13 @@ const Auth = () => {
 					variant="outline"
 					className="w-full p-6 text-sm cursor-pointer hover:opacity-80"
 				>
-					 Facebook
-					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
+					Facebook
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="1em"
+						height="1em"
+						viewBox="0 0 256 256"
+					>
 						<path
 							fill="#1877F2"
 							d="M256 128C256 57.308 198.692 0 128 0S0 57.308 0 128c0 63.888 46.808 116.843 108 126.445V165H75.5v-37H108V99.8c0-32.08 19.11-49.8 48.348-49.8C170.352 50 185 52.5 185 52.5V84h-16.14C152.959 84 148 93.867 148 103.99V128h35.5l-5.675 37H148v89.445c61.192-9.602 108-62.556 108-126.445"

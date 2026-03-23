@@ -64,7 +64,7 @@ const RegisterForm = () => {
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
 							<FieldLabel htmlFor={field.name}>
-								Username*
+								Username<span className="text-red-700">*</span>
 							</FieldLabel>
 							<Input
 								{...field}
@@ -92,7 +92,7 @@ const RegisterForm = () => {
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
 							<FieldLabel htmlFor={field.name}>
-								Email Address*
+								Email Address<span className="text-red-700">*</span>
 							</FieldLabel>
 							<Input
 								{...field}
@@ -120,7 +120,7 @@ const RegisterForm = () => {
 					render={({ field, fieldState }) => (
 						<Field data-invalid={fieldState.invalid}>
 							<FieldLabel htmlFor={field.name}>
-								Password*
+								Password<span className="text-red-700">*</span>
 							</FieldLabel>
 							<Input
 								{...field}
